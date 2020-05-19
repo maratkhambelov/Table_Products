@@ -1,19 +1,26 @@
+
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+      <ControlPanel/>
+      <Table/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { getProducts } from './request.js';
+import Table from "@/components/Table";
+import {store} from './store/store.js'
+import ControlPanel from "@/components/ControlPanel";
 
 export default {
   name: 'App',
+    store,
   components: {
-    HelloWorld
+      Table,
+      ControlPanel
   }
 }
+getProducts();
 </script>
 
 <style>
