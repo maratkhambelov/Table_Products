@@ -1,8 +1,13 @@
 
 <template>
   <div id="app">
-      <ControlPanel/>
-      <Table/>
+<!--      <span >-->
+<!--          <span @click="selectProduct({id: 1, title: 'some', selected: false})"> CLICK ME PLEASE</span>-->
+<!--          {{selectedProducts}}-->
+<!--      </span>-->
+      <ControlPanel />
+      <Table />
+
   </div>
 </template>
 
@@ -15,6 +20,25 @@ import ControlPanel from "@/components/ControlPanel";
 export default {
   name: 'App',
     store,
+    state:{
+      selectedProds:['helloo'],
+    },
+
+    data() {
+        return {
+            selectedProducts: ['hello', 'world'],
+            product: {
+                id: null,
+                selected: false,
+                title: null,
+            }
+        }
+    },
+    methods:{
+      selectProduct: function(product){
+          this.selectedProducts.push({...product});
+      },
+    },
   components: {
       Table,
       ControlPanel

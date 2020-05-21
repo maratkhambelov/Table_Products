@@ -9,10 +9,6 @@
         :key="property">
             {{property}}
         </td>
-<!--        <td v-for="(value, name) in product"-->
-<!--            :key="getId(name)">-->
-<!--            {{name}}-->
-<!--        </td>-->
         <td>
 <!--            <button>-->
 <!--                delete-->

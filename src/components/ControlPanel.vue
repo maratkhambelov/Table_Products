@@ -2,11 +2,13 @@
    <div>
        <span>Sorting by:</span>
        <span>
-           <span v-for="prop in allProps"
-                 :key="prop.id"
-                 @click="handleProperties(prop)">
-               {{prop.title}}
-           </span>
+           <template v-for="prop in allProps">
+               <span v-if="prop.title !== 'id'"
+                       :key="prop.id"
+                       @click="handleProperties(prop)">
+                   {{prop.title}}
+               </span>
+           </template>
        </span>
        <span>
            <span v-for="valueProdsPerPage in valuesProdsPerPage"
@@ -33,12 +35,14 @@
            </div>
        </span>
        <span>
-            <label v-for="prop in allProps"
+           <template v-for="prop in allProps">
+            <label v-if="prop.title !== 'id'"
                    :key="prop.id"
                    @click="handleSelect(prop)">
                    <input type="checkbox" v-model="prop.seen">
                    {{prop.title}}
-               </label>
+           </label>
+           </template>
        </span>
 <!--       <select multiple>-->
 <!--           <option>-->

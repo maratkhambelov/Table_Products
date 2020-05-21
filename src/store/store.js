@@ -8,8 +8,9 @@ export const store = new Vuex.Store({
     state: {
         products: [],
         properties: [],
-        allProperties: ["product", "calories", "fat", "carbs", "protein", "iron"],
+        allProperties: ["id", "product", "calories", "fat", "carbs", "protein", "iron"],
         allProps: [
+
             {
                 id: 1,
                 title: 'product',
@@ -46,8 +47,15 @@ export const store = new Vuex.Store({
                 seen: true,
                 sortBy: false,
             },
+            {
+                id: 7,
+                title: 'id',
+                seen: true,
+                sortBy: false,
+            },
 
         ],
+        shownProducts: [],
         allValuesProdsPerPage: [10, 15, 20],
         productsPerPage: 10,
         currentProducts: 10,
@@ -76,7 +84,7 @@ export const store = new Vuex.Store({
             commit('setProducts', products )
         },
         setAllProperties({commit}) {
-            const newProperties =  [ "product", "calories", "fat", "iron"];
+            const newProperties =  [ "id", "product", "calories", "fat", "iron"];
             commit('setProperties', newProperties);
         },
         setFirstProperty({commit}, firstProp){
@@ -123,6 +131,12 @@ export const store = new Vuex.Store({
             }
             commit('setProperties', newProperties);
         },
+        deleteProd({commit}, product){
+            commit('deleteProduct', product.id);
+        },
+        setShownProds({commit}, products){
+            commit('setShownProducts', products);
+        }
         // addProperty({commit}, newProperty){
         //     //
         // }
@@ -146,6 +160,14 @@ export const store = new Vuex.Store({
         },
         setCurrentPage(state, newValue){
             state.currentProducts = newValue;
+        },
+        deleteProduct(state, id){
+            const foundItem = state.products.find(item => item.id === id);
+            const idxDeletedItem = state.products.indexOf(foundItem);
+            state.products.splice(idxDeletedItem, 1);
+        },
+        setShownProducts(state, items){
+            state.shownProducts = items;
         }
     }
 })

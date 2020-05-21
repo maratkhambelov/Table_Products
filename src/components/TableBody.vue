@@ -1,56 +1,60 @@
 <template>
     <div>
-    <tr v-for="product in products"
+        <span>
+            <div
+            @click="selectAll">
+                clickme
+            </div>
+  {{selectedItems}}
+        </span>
+    <tr v-for="product in prodsThisPage"
         :key="product.id">
         <td>
-            <input type="checkbox" v-model="chosenProducts">
+            <Filters v-model="selectedItems" :val="product.id"></Filters>
         </td>
-        <td v-for="(value,name) in product"
-        :key="getId(name)">
-            {{value}}
-        </td>
+        <template v-for="(value,name) in product">
+            <td v-if="name !== 'id'" :key="value">
+                {{value}}
+            </td>
+        </template>
         <td>
-            <button>
+            <button
+            @click="deleteProduct(product)">
                 delete
             </button>
         </td>
         </tr>
     </div>
 </template>
-<!--<button-->
-<!--        :disabled="!product.inventory"-->
-<!--        @click="addProductToCart(product)">-->
-<!--    Add to cart-->
-<!--</button>-->
+
 <script>
-    // import { mapGetters} from 'vuex'
+import Filters from './Checkbox';
     export default {
-        state: {
-            arrChosenProducts: [],
+        // props: ['selectedItems'],
+        data () {
+            return {
+                selectedItems: [1,2],
+            }
+        },
+        components:{
+            Filters,
         },
         computed: {
-
-            products() {
-                const shownProperties = this.$store.state.properties;
-
-                const productsStore = this.$store.state.products;
-                // const shownProducts = [];
-                // productsStore.forEach(item=>{
-                //     const newItemAsArr = [];
-                //     const itemAsArr = Object.entries(item);
-                //     itemAsArr.forEach(property => {
-                //         const found = shownProperties.find(item => item === property[0]);
-                //         if(found !== undefined) {
-                //             newItemAsArr.push(property);
-                //         }
-                //     })
-                //     const newItem = Object.fromEntries(newItemAsArr);
-                //     shownProducts.push(newItem);
-                // });
+            shownProps(){
+                const shownProps = this.$store.state.properties;
+                return  shownProps;
+            },
+            allProds(){
+              const allProds = this.$store.state.products;
+              return allProds;
+            },
+            shownProds(){
+                const shownProperties = this.shownProps;
+                const productsStore = this.allProds;
                 const shownProducts = [];
-                let idxLastShownEl =  this.$store.state.currentProducts;
-                let prodsPerPage = this.$store.state.productsPerPage;
-                let idxFirstShownEl = idxLastShownEl - prodsPerPage;
+                // let idxLastShownEl =  this.$store.state.currentProducts;
+                // let prodsPerPage = this.$store.state.productsPerPage;
+                // let idxFirstShownEl = idxLastShownEl - prodsPerPage;
                 productsStore.forEach(product=>{
                     const newItemAsArr = [];
                     shownProperties.forEach((currentProperty=>{
@@ -65,54 +69,45 @@
                     const newItem = Object.fromEntries(newItemAsArr);
                     shownProducts.push(newItem);
                 })
+                return shownProducts;
+            },
+            prodsThisPage() {
+                let idxLastShownEl =  this.$store.state.currentProducts;
+                let prodsPerPage = this.$store.state.productsPerPage;
+                let idxFirstShownEl = idxLastShownEl - prodsPerPage;
+                const shownProducts = this.shownProds;
+
                 const productsOnePage = [...shownProducts.slice(idxFirstShownEl, idxLastShownEl)];
-
                 return productsOnePage;
-                // shownProperties.forEach(currentProperty=>{
-                //
-                //
-                //     // productsStore.forEach(product=>{
-                //     //     const newItemAsArr = [];
-                //     //     const productAsArr = Object.entries(product);
-                //     //     console.log(productAsArr)
-                //     //     const foundProp = productAsArr.find(property => property[0] === currentProperty);
-                //     //     if(foundProp !== undefined) {
-                //     //         // console.log(foundProp);
-                //     //         newItemAsArr.push(foundProp);
-                //     //     }
-                //     //     const newItem = Object.fromEntries(newItemAsArr);
-                //     //     shownProducts.push(newItem);
-                //     // })
-                // })
-
-
             },
 
-            shownProducts(){
-                // const shownProducts = [...this.$store.state.products];
-                // // shownProducts.map(item=> item === item.['id'])
-                // console.log(shownProducts);
-                // return shownProducts;
-                return 'hello';
-            },
-            // setProperties(){
-            //     const shownProperties = [ 'calories', ];
-            //     console.log('hey');
-            //     console.log(this.$store.state.products[0].keys())
-            //     return shownProperties;
-            // },
-            // productsKeys(){
-            //     this.$store.state.products
-            // }
-            // ...mapState({products: state => state.products.all}),
-            // ...mapGetters({products: 'products'})
         },
         methods: {
-            chosenProducts(product){
-                this.state.arrChosenProducts.push(product);
-                console.log(this.state.arrChosenProducts);
+            deleteProduct(product){
+                    this.$store.dispatch('deleteProd', product);
             },
+            selectAll(){
+                // console.log( this._data.selectedItems);
+                const arrId = [];
+                this.prodsThisPage.filter(item => arrId.push(item.id));
 
+                console.log(arrId);
+                let selectedItems = this._data.selectedItems;
+                selectedItems = [...selectedItems, ...arrId];
+
+                console.log(selectedItems);
+                this._data.selectedItems = Array.from(new Set(selectedItems));
+            }
+            // chosenProducts(product){
+            //     this.state.arrChosenProducts.push(product);
+            //     console.log(this.state.arrChosenProducts);
+            // },
+        },
+        filteredProd(){
+            let self = this;
+            console.log(self);
+            delete self.id;
+            return self
         }
         // created () {
         //     this.$store.dispatch('products')
