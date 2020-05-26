@@ -3,9 +3,14 @@
     <table>
         <div>
         </div>
-        <TableTrHead/>
-        <TableBody />
-<!--        :selectedItems="this._data.selectedItems"-->
+        <TableTrHead
+                :prodsThisPage="this.prodsThisPage"/>
+        <TableBody  :selectedItems="selectedItems"
+                    :selectAll="this.selectAll"
+                    :shownProps="this.shownProps"
+                    :allProds="this.allProds"
+                    :prodsThisPage="this.prodsThisPage"
+                    :addItem="this.addItem"/>
     </table>
 </template>
 
@@ -15,9 +20,28 @@
     export default {
         name: 'Table',
         props: {
-            selectedProducts: {
+            selectedItems: {
                 type:  Array,
             },
+            selectAll: {
+                type: Function,
+            },
+            shownProps: {
+                type: Array,
+            },
+            allProds: {
+                type: Array,
+            },
+            shownProds: {
+                type: Array,
+            },
+            prodsThisPage: {
+                type: Array,
+            },
+            addItem:{
+                type: Function
+            },
+
         },
         // data () {
         //     return {
@@ -28,18 +52,15 @@
             TableBody,
             TableTrHead
         },
-        computed:{
-            productsS(){
-
-                return 'some'
-            }
-        },
-        // computed: mapState({
-        //     products: state => state.products.all
-        // }),
+        // computed:{
+        //     asc(){
+        //         return true;
+        //     }
+        // },
         // methods: {
-        //
-        //
+        //     setAscDescSort() {
+        //         this.asc = !this.asc;
+        //     },
         // },
         created () {
             // this.$store.dispatch('setAllProducts')

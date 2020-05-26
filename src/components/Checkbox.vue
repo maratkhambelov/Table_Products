@@ -1,13 +1,16 @@
 <template>
-    <div class="my-check-box">
-        <input type="checkbox" :value="val" v-model="checked" @change="onChange" ref="checkbox"/>
-    </div>
+    <input type="checkbox"
+           :value="val"
+           v-model="checked"
+           @change="onChange"
+           ref="checkbox" />
+
 </template>
 
 <script>
     export default {
-        name: 'Filters',
-        props: ['value', 'val', 'label'],
+        name: 'CustomCheckbox',
+        props: [ 'selectedItems', 'val'],
         data () {
             return {
                 checkedProxy: false
@@ -25,7 +28,7 @@
         },
         methods: {
             onChange: function() {
-                this.$emit('input', this.checkedProxy)
+                this.$emit('update', this.checkedProxy)
             }
         }
     }

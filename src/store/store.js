@@ -8,6 +8,7 @@ export const store = new Vuex.Store({
     state: {
         products: [],
         properties: [],
+        asc: true,
         allProperties: ["id", "product", "calories", "fat", "carbs", "protein", "iron"],
         allProps: [
 
@@ -88,18 +89,56 @@ export const store = new Vuex.Store({
             commit('setProperties', newProperties);
         },
         setFirstProperty({commit}, firstProp){
-            const found = this.state.properties.find(item=> item === firstProp);
+            //TODO: NOT WORK
+            // const found = this.state.properties.find(item=> item === firstProp);
+            const found = this.state.allProps.find(item=> item.sortBy === true)
             if(found === undefined) {
                 return;
             }
+            console.log(found);
             const newProperties = []
             newProperties.push(firstProp);
             this.state.properties.forEach(item=> {
-                if(item !== firstProp){
+                if(item.title !== firstProp){
                     newProperties.push(item);
                 }
             })
             commit('setProperties', newProperties);
+        },
+
+        //change later
+        sortBy({commit}, order){
+            const prods = this.state.products;
+            // const prop = product.title;
+            // const orderBy = product.order;
+            // console.log(product)
+            const sortedCol = this.state.allProps.find((item)=>item.sortBy === true);
+            const prop = sortedCol.title
+            const orderBy = order;
+            console.log(orderBy)
+            console.log(prop);
+            function dynamicSort(property,order) {
+                var sort_order = 1;
+                if(order === false){
+                    sort_order = -1;
+                }
+                return function (a, b){
+                    // a should come before b in the sorted order
+                    if(a[property] < b[property]){
+                        return -1 * sort_order;
+                        // a should come after b in the sorted order
+                    }else if(a[property] > b[property]){
+                        return 1 * sort_order;
+                        // a and b are the same
+                    }else{
+                        return 0 * sort_order;
+                    }
+                }
+            }
+
+            prods.sort(dynamicSort(prop, orderBy));
+            commit('setProducts', prods);
+            console.log(this.state.products);
         },
         setProdsPerPage({commit}, newValue){
             commit('setProductsPerPage', newValue);
@@ -154,6 +193,9 @@ export const store = new Vuex.Store({
         },
         setProperties(state, newProperties){
             state.properties = newProperties;
+        },
+        setAllProps(state, newProps){
+            state.allProps = newProps;
         },
         setProductsPerPage(state, newValue){
             state.productsPerPage = newValue;
