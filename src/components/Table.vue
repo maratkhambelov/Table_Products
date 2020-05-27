@@ -4,10 +4,11 @@
         <div>
         </div>
         <TableTrHead
-                :prodsThisPage="this.prodsThisPage"/>
+                :prodsThisPage="this.prodsThisPage"
+                :placedProps="this.placedProps"/>
         <TableBody  :selectedItems="selectedItems"
                     :selectAll="this.selectAll"
-                    :shownProps="this.shownProps"
+                    :placedProps="this.placedProps"
                     :allProds="this.allProds"
                     :prodsThisPage="this.prodsThisPage"
                     :addItem="this.addItem"/>
@@ -26,7 +27,7 @@
             selectAll: {
                 type: Function,
             },
-            shownProps: {
+            placedProps: {
                 type: Array,
             },
             allProds: {

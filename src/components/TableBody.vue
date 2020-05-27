@@ -17,7 +17,7 @@
             />
         </td>
         <template v-for="(value,name) in product">
-            <td v-if="name !== 'id'" :key="value">
+            <td v-if="name !== 'id'" :key="name">
                 {{value}}
             </td>
         </template>
@@ -47,7 +47,7 @@ import CustomCheckbox from './Checkbox';
             allProds: {
                 type: Array,
             },
-            shownProds: {
+            placedProps: {
                 type: Array,
             },
             prodsThisPage: {

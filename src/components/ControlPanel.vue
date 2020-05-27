@@ -5,7 +5,7 @@
            <template v-for="prop in allProps">
                <span v-if="prop.title !== 'id'"
                        :key="prop.id"
-                       @click="handleProperties(prop)">
+                       @click="handleProperties(prop.title)">
                    {{prop.title}}
                </span>
            </template>
@@ -64,10 +64,10 @@
             allProps(){
                 return this.$store.state.allProps;
             },
-            properties(){
-
-                return this.$store.state.allProperties;
-            },
+            // properties(){
+            //
+            //     return this.$store.state.allProperties;
+            // },
             products() {
                 const productsStore = this.$store.state.products;
                 return productsStore;
@@ -112,7 +112,14 @@
         },
         methods: {
             handleProperties(property){
-                this.$store.dispatch('setFirstProperty', property.title);
+                const props = this.allProps;
+                console.log(property)
+
+                const found = props.find(item=> item.placed === true && !item.hidden && item.title === property);
+                if(found !== undefined) {
+                    this.$store.dispatch('setFirstProperty', property);
+                }
+                return
             },
             handleProdsPerPage(newValue){
                 this.$store.dispatch('setProdsPerPage', newValue);

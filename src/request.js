@@ -18,7 +18,7 @@ export const getProducts = () => new Promise((resolve, reject) => {
   setTimeout(() => {
     resolve(products);
     store.dispatch('setAllProducts', products);
-    store.dispatch('setAllProperties');
+    // store.dispatch('setAllProperties');
   }, delay);
 });
 

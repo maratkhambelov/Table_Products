@@ -6,14 +6,15 @@
 <!--          {{selectedProducts}}-->
 <!--      </span>-->
       <div
-      @click="this.letsSort">
+     >
+<!--          @click="this.letsSort"-->
           hello
           {{selectedItems}}
       </div>
       <ControlPanel />
       <Table  :selectedItems="this.selectedItems"
               :selectAll="this.selectAll"
-              :shownProps="this.shownProps"
+              :placedProps="this.placedProps"
               :allProds="this.allProds"
               :prodsThisPage="this.prodsThisPage"
               :addItem="this.addItem"
@@ -46,29 +47,26 @@ export default {
             // console.log(this.prodsThisPage.filter(i => i.selected).map(i => i.id))
             // return this.prodsThisPage.filter(i => i.selected).map(i => i.id)
         },
-        shownProps() {
-            const shownProps = this.$store.state.properties;
-            return shownProps;
-        },
-        seenProps(){
+        placedProps() {
             const allProps = this.$store.state.allProps;
-            const seenProps = allProps.filter(item => item.seen === true)
-            return seenProps;
+            const placedProps = allProps.filter(item => item.placed === true)
+            return placedProps;
         },
+
         allProds() {
             const allProds = this.$store.state.products;
             return allProds;
         },
         shownProds() {
-            const shownProperties = this.shownProps;
-            const productsStore = this.allProds;
+            const shownProperties = this.placedProps
+            const products = this.allProds;
             const shownProducts = [];
-            // let idxLastShownEl =  this.$store.state.currentProducts;
-            // let prodsPerPage = this.$store.state.productsPerPage;
-            // let idxFirstShownEl = idxLastShownEl - prodsPerPage;
-            productsStore.forEach(product => {
+            let newArrProps = shownProperties.filter(item => item.sortBy === true).map(item=> item.title);
+            const selectedProps = shownProperties.filter(item=>item.sortBy === false).map(item=>item.title)
+            newArrProps = [...newArrProps, ...selectedProps]
+            products.forEach(product => {
                 const newItemAsArr = [];
-                shownProperties.forEach((currentProperty => {
+                newArrProps.forEach((currentProperty => {
                     const productAsArr = Object.entries(product);
                     productAsArr.forEach(property => {
                         if (currentProperty === property[0]) {
@@ -87,10 +85,7 @@ export default {
             let prodsPerPage = this.$store.state.productsPerPage;
             let idxFirstShownEl = idxLastShownEl - prodsPerPage;
             const shownProducts = this.shownProds;
-
             const productsOnePage = [...shownProducts.slice(idxFirstShownEl, idxLastShownEl)];
-            // productsOnePage.map(item=> item.selected = false);
-            // console.log(productsOnePage);
             return productsOnePage;
         },
 
@@ -100,24 +95,13 @@ export default {
             console.log(id);
             this.selectedItems.push(id);
             console.log(this.selectedItems)
-            // this.data_.selectedItems.push(id);
         },
         selectAll() {
             const arrId = [];
             this.prodsThisPage.filter(item => arrId.push(item.id));
 
-            // console.log(arrId);
-            // let selectedItems = this._data.selectedItems;
-            // selectedItems = [...selectedItems, ...arrId];
-            //
-            // this._data.selectedItems = Array.from(new Set(selectedItems));
-            // console.log(selectedItems);
         },
-        letsSort(){
-            const firstColumn = this.seenProps[0];
-            firstColumn.order = 'desc';
-            this.$store.dispatch('sortBy', firstColumn);
-        }
+
     },
 
     components: {
@@ -138,3 +122,8 @@ getProducts();
   margin-top: 60px;
 }
 </style>
+<!--seenProps(){-->
+<!--const allProps = this.$store.state.allProps;-->
+<!--const seenProps = allProps.filter(item => item.seen === true)-->
+<!--return seenProps;-->
+<!--},-->

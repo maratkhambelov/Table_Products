@@ -7,51 +7,51 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
     state: {
         products: [],
-        properties: [],
-        asc: true,
-        allProperties: ["id", "product", "calories", "fat", "carbs", "protein", "iron"],
+        // properties: [],
+        // allProperties: ["id", "product", "calories", "fat", "carbs", "protein", "iron"],
         allProps: [
 
             {
                 id: 1,
                 title: 'product',
-                seen: true,
+                placed: true,
                 sortBy: true,
             },
             {
                 id: 2,
                 title: 'calories',
-                seen: true,
+                placed: true,
                 sortBy: false,
             },
             {
                 id: 3,
                 title: 'fat',
-                seen: true,
+                placed: true,
                 sortBy: false,
             },
             {
                 id: 4,
                 title: 'carbs',
-                seen: false,
+                placed: false,
                 sortBy: false,
             },
             {
                 id: 5,
                 title: 'protein',
-                seen: false,
+                placed: false,
                 sortBy: false,
             },
             {
                 id: 6,
                 title: 'iron',
-                seen: true,
+                placed: true,
                 sortBy: false,
             },
             {
                 id: 7,
                 title: 'id',
-                seen: true,
+                placed: true,
+                hidden: true,
                 sortBy: false,
             },
 
@@ -64,12 +64,6 @@ export const store = new Vuex.Store({
     getters: {
         products: () => {
             return this.state.products
-        },
-        properties: ()=> {
-            return this.state.properties;
-        },
-        allProperties: ()=>{
-            return this.state.allProperties;
         },
     },
             // return state.products.map(({ id, quantity }) => {
@@ -84,39 +78,35 @@ export const store = new Vuex.Store({
         setAllProducts({commit}, products){
             commit('setProducts', products )
         },
-        setAllProperties({commit}) {
-            const newProperties =  [ "id", "product", "calories", "fat", "iron"];
-            commit('setProperties', newProperties);
-        },
+        // setAllProperties({commit}) {
+        //     // const newProperties =  [ "id", "product", "calories", "fat", "iron"];
+        //     commit('setAllProps', newProperties);
+        // },
         setFirstProperty({commit}, firstProp){
-            //TODO: NOT WORK
-            // const found = this.state.properties.find(item=> item === firstProp);
-            const found = this.state.allProps.find(item=> item.sortBy === true)
-            if(found === undefined) {
-                return;
-            }
-            console.log(found);
-            const newProperties = []
-            newProperties.push(firstProp);
-            this.state.properties.forEach(item=> {
-                if(item.title !== firstProp){
-                    newProperties.push(item);
-                }
-            })
-            commit('setProperties', newProperties);
+            const props = this.state.allProps
+                .map(item => {
+                    item.sortBy = false;
+                    return item
+                })
+                .map(item => {
+                    if(item.title === firstProp){
+                        item.sortBy = true;
+                    }
+                    return item
+                })
+
+
+            commit('setAllProps', props);
         },
 
         //change later
         sortBy({commit}, order){
             const prods = this.state.products;
-            // const prop = product.title;
-            // const orderBy = product.order;
-            // console.log(product)
             const sortedCol = this.state.allProps.find((item)=>item.sortBy === true);
             const prop = sortedCol.title
             const orderBy = order;
-            console.log(orderBy)
-            console.log(prop);
+            // console.log(orderBy)
+            // console.log(prop);
             function dynamicSort(property,order) {
                 var sort_order = 1;
                 if(order === false){
@@ -154,7 +144,7 @@ export const store = new Vuex.Store({
         },
         setProperty({commit}, prop) {
             const newProperties = [];
-            const oldProperties = this.state.properties;
+            const oldProperties = this.state.allProps;
             const found = oldProperties.find(item => item === prop);
             if (found === undefined) {
                 oldProperties.forEach(item => newProperties.push(item));
@@ -168,7 +158,7 @@ export const store = new Vuex.Store({
                     }
                 );
             }
-            commit('setProperties', newProperties);
+            commit('setAllProps', newProperties);
         },
         deleteProd({commit}, product){
             commit('deleteProduct', product.id);
@@ -191,9 +181,9 @@ export const store = new Vuex.Store({
         setProducts(state, newProducts) {
             state.products = newProducts;
         },
-        setProperties(state, newProperties){
-            state.properties = newProperties;
-        },
+        // setProperties(state, newProperties){
+        //     state.properties = newProperties;
+        // },
         setAllProps(state, newProps){
             state.allProps = newProps;
         },

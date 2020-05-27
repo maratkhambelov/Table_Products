@@ -5,7 +5,7 @@
         <td>
             <input type="checkbox">
         </td>
-        <template v-for="property in properties">
+        <template v-for="property in shownProps">
             <td v-if="property.sortBy !== true"
                 :key="property.id">
                 {{property.title}}
@@ -38,6 +38,9 @@
             shownProds: {
                 type: Array,
             },
+            placedProps: {
+                type: Array,
+            },
             prodsThisPage:{
                 type: Array,
             }
@@ -51,14 +54,23 @@
             products() {
                 return this.$store.state.products
             },
+            shownProps(){
+                const placedProps = this._props.placedProps;
+                const propSortBy = placedProps.filter(item=> item.sortBy === true);
+                const seenProps = placedProps.filter(item=> !item.hidden && item.placed && !item.sortBy);
+                const finalProps = [...propSortBy, ...seenProps]
+
+                console.log(finalProps)
+                return finalProps;
+            },
             // product(){
             //     return this.$store.state.products.find(item=>item)
             // },
-            properties(){
-                const shownProps = this.$store.state.allProps.filter(item=> item.seen === true);
-                console.log(shownProps);
-                return shownProps;
-            },
+            // properties(){
+            //     const shownProps = this.$store.state.allProps.filter(item=> item.seen === true);
+            //     console.log(shownProps);
+            //     return shownProps;
+            // },
             // asc(){
             //     return true;
             // }
