@@ -39,7 +39,7 @@
             <label v-if="prop.title !== 'id'"
                    :key="prop.id"
                    @click="handleSelect(prop)">
-                   <input type="checkbox" v-model="prop.seen">
+                   <input type="checkbox" v-model="prop.placed">
                    {{prop.title}}
            </label>
            </template>
@@ -131,8 +131,7 @@
                 this.$store.dispatch('nextPage');
             },
             handleSelect(prop){
-
-                this.$store.dispatch('setProperty', prop.title);
+                this.$store.dispatch('setProperty', prop);
             },
         },
         created () {

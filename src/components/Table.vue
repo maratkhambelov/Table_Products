@@ -4,12 +4,14 @@
         <div>
         </div>
         <TableTrHead
+                :setOrder="this.setOrder"
+                :currentOrder="this.currentOrder"
                 :prodsThisPage="this.prodsThisPage"
                 :placedProps="this.placedProps"/>
         <TableBody  :selectedItems="selectedItems"
                     :selectAll="this.selectAll"
                     :placedProps="this.placedProps"
-                    :allProds="this.allProds"
+                    :allProducts="this.allProducts"
                     :prodsThisPage="this.prodsThisPage"
                     :addItem="this.addItem"/>
     </table>
@@ -21,16 +23,23 @@
     export default {
         name: 'Table',
         props: {
+            setOrder:{
+                type: Function
+            },
+            currentOrder: {
+                type: String
+            },
             selectedItems: {
                 type:  Array,
             },
             selectAll: {
                 type: Function,
             },
+
             placedProps: {
                 type: Array,
             },
-            allProds: {
+            allProducts: {
                 type: Array,
             },
             shownProds: {

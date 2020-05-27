@@ -15,10 +15,12 @@
       <Table  :selectedItems="this.selectedItems"
               :selectAll="this.selectAll"
               :placedProps="this.placedProps"
-              :allProds="this.allProds"
+              :allProducts="this.allProducts"
               :prodsThisPage="this.prodsThisPage"
               :addItem="this.addItem"
               :shownProds="this.shownProds"
+              :setOrder="this.setOrder"
+              :currentOrder="this.currentOrder"
       />
 
 
@@ -35,11 +37,12 @@ export default {
     name: 'App',
     store,
 
-    // data() {
-    //     return {
-    //         selectedItems: [1, 2],
-    //     }
-    // },
+    data() {
+        return {
+            // selectedItems: [1, 2],
+            currentOrder: 'asc',
+        }
+    },
     computed: {
         selectedItems(){
             const selectedItems = [1,2];
@@ -53,13 +56,26 @@ export default {
             return placedProps;
         },
 
-        allProds() {
-            const allProds = this.$store.state.products;
-            return allProds;
+        allProducts() {
+            const allProducts = this.$store.state.products;
+            const sortedCol = this.placedProps.find((item)=>item.sortBy === true);
+            const property = sortedCol.title
+            const order = this._data.currentOrder;
+            allProducts.sort(dynamicSort(property, order));
+            return allProducts;
         },
+        prodsThisPage() {
+            let idxLastShownEl = this.$store.state.currentProducts;
+            let prodsPerPage = this.$store.state.productsPerPage;
+            let idxFirstShownEl = idxLastShownEl - prodsPerPage;
+            const shownProducts = this.shownProds;
+            const productsOnePage = [...shownProducts.slice(idxFirstShownEl, idxLastShownEl)];
+            return productsOnePage;
+        },
+
         shownProds() {
             const shownProperties = this.placedProps
-            const products = this.allProds;
+            const products = this.allProducts;
             const shownProducts = [];
             let newArrProps = shownProperties.filter(item => item.sortBy === true).map(item=> item.title);
             const selectedProps = shownProperties.filter(item=>item.sortBy === false).map(item=>item.title)
@@ -80,14 +96,6 @@ export default {
             })
             return shownProducts;
         },
-        prodsThisPage() {
-            let idxLastShownEl = this.$store.state.currentProducts;
-            let prodsPerPage = this.$store.state.productsPerPage;
-            let idxFirstShownEl = idxLastShownEl - prodsPerPage;
-            const shownProducts = this.shownProds;
-            const productsOnePage = [...shownProducts.slice(idxFirstShownEl, idxLastShownEl)];
-            return productsOnePage;
-        },
 
     },
     methods: {
@@ -99,9 +107,31 @@ export default {
         selectAll() {
             const arrId = [];
             this.prodsThisPage.filter(item => arrId.push(item.id));
-
+        },
+        setOrder(){
+            const order = this._data.currentOrder;
+            if(order === 'asc') {
+                this._data.currentOrder = 'desc';
+            }
+            else {
+                this._data.currentOrder = 'asc'
+            }
         },
 
+        // sortBy (order){
+        //     const prods = this.allProducts;
+        //     const sortedCol = this.placedProps.find((item)=>item.sortBy === true);
+        //     const property = sortedCol.title
+        //     // console.log(orderBy)
+        //     // console.log(prop);
+        //
+        //     prods.sort(dynamicSort(property, order));
+        //
+        //     // commit('setProducts', prods);
+        //     // console.log(this.state.products);
+        //     // const sortedCol = this.state.allProps.find((item)=>item.sortBy === true);
+        //
+        // },
     },
 
     components: {
@@ -109,6 +139,26 @@ export default {
         ControlPanel
     }
 }
+
+function dynamicSort(property, order = 'asc') {
+    let sort_order = 1;
+    if(order === 'desc'){
+        sort_order = -1;
+    }
+    return function (a, b){
+        // a should come before b in the sorted order
+        if(a[property] < b[property]){
+            return -1 * sort_order;
+            // a should come after b in the sorted order
+        }else if(a[property] > b[property]){
+            return 1 * sort_order;
+            // a and b are the same
+        }else{
+            return 0 * sort_order;
+        }
+    }
+}
+
 getProducts();
 </script>
 

@@ -10,10 +10,10 @@
                 :key="property.id">
                 {{property.title}}
             </td>
-            <td v-else @click="setAscDescSort"
+            <td v-else @click="toggleOrder"
                 :key="property.id">
                 {{property.title}}
-                <div v-if="asc">
+                <div v-if="currentOrder === 'asc'">
                     asc
                 </div>
                 <div v-else>
@@ -35,6 +35,12 @@
 <script>
     export default {
         props:{
+            setOrder:{
+                type: Function
+            },
+            currentOrder: {
+                type: String
+            },
             shownProds: {
                 type: Array,
             },
@@ -45,22 +51,21 @@
                 type: Array,
             }
         },
-        data() {
-            return {
-                asc: true,
-            }
-        },
+        // data() {
+            // return {
+            //     order: this._props.currentOrder,
+            // }
+        // },
         computed: {
             products() {
                 return this.$store.state.products
             },
+
             shownProps(){
                 const placedProps = this._props.placedProps;
                 const propSortBy = placedProps.filter(item=> item.sortBy === true);
                 const seenProps = placedProps.filter(item=> !item.hidden && item.placed && !item.sortBy);
                 const finalProps = [...propSortBy, ...seenProps]
-
-                console.log(finalProps)
                 return finalProps;
             },
             // product(){
@@ -79,18 +84,19 @@
 
         // },
         methods: {
-            toggleAsc(){
-              this._data.asc = !this._data.asc
-            },
+            // toggleAsc(){
+            //   this._data.asc = !this._data.asc
+            // },
 
-            setAscDescSort() {
-
+            toggleOrder() {
+                this._props.setOrder();
+                console.log(this._props.currentOrder)
                 // const firstColumn = this._props.prodsThisPage.find((item, i)=>i===0);
                 // console.log(this._props.prodsThisPage)
-                this.toggleAsc();
+                // this.toggleAsc();
                 // firstColumn.order = this._data.asc;
-                const order = this._data.asc;
-                this.$store.dispatch('sortBy', order );
+                // const order = this._data.asc;
+                // this.$store.dispatch('sortBy', order );
 
             },
         },

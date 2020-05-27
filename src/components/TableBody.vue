@@ -44,7 +44,7 @@ import CustomCheckbox from './Checkbox';
             shownProps: {
                 type: Array,
             },
-            allProds: {
+            allProducts: {
                 type: Array,
             },
             placedProps: {

@@ -65,6 +65,9 @@ export const store = new Vuex.Store({
         products: () => {
             return this.state.products
         },
+        properties: (state) => {
+            return state.allProps
+        }
     },
             // return state.products.map(({ id, quantity }) => {
             //     const product = rootState.products.all.find(product => product.id === id)
@@ -100,36 +103,7 @@ export const store = new Vuex.Store({
         },
 
         //change later
-        sortBy({commit}, order){
-            const prods = this.state.products;
-            const sortedCol = this.state.allProps.find((item)=>item.sortBy === true);
-            const prop = sortedCol.title
-            const orderBy = order;
-            // console.log(orderBy)
-            // console.log(prop);
-            function dynamicSort(property,order) {
-                var sort_order = 1;
-                if(order === false){
-                    sort_order = -1;
-                }
-                return function (a, b){
-                    // a should come before b in the sorted order
-                    if(a[property] < b[property]){
-                        return -1 * sort_order;
-                        // a should come after b in the sorted order
-                    }else if(a[property] > b[property]){
-                        return 1 * sort_order;
-                        // a and b are the same
-                    }else{
-                        return 0 * sort_order;
-                    }
-                }
-            }
 
-            prods.sort(dynamicSort(prop, orderBy));
-            commit('setProducts', prods);
-            console.log(this.state.products);
-        },
         setProdsPerPage({commit}, newValue){
             commit('setProductsPerPage', newValue);
             console.log(this.state.productsPerPage);
@@ -143,22 +117,43 @@ export const store = new Vuex.Store({
             commit('setCurrentPage', newValue);
         },
         setProperty({commit}, prop) {
-            const newProperties = [];
-            const oldProperties = this.state.allProps;
-            const found = oldProperties.find(item => item === prop);
-            if (found === undefined) {
-                oldProperties.forEach(item => newProperties.push(item));
-                newProperties.push(prop);
+            const props = this.getters.properties;
+
+            console.log(props)
+            // const idxCurrentProp = props.indexOf(currentProp);
+            // console.log(idxCurrentProp)
+            if(prop.sortBy === true){
+                const foundItem = props.find(item=> item.placed && !item.hidden && !item.sortBy)
+                foundItem.sortBy = true;
+                // newProps = [...newProps, ...foundItem]
             }
-            else{
-                oldProperties.forEach(item=> {
-                        if(item !== prop){
-                            newProperties.push(item);
-                        }
-                    }
-                );
-            }
-            commit('setAllProps', newProperties);
+            let newProps = props.filter(item=>{
+                if(item.id === prop.id){
+                    item.placed = !item.placed;
+                    item.sortBy = false
+                }
+                return item;
+            })
+
+            console.log(newProps)
+            console.log(commit)
+            // commit('setAllProps', newProps);
+
+
+            // const newProps.filter(item=> item.placed && !item.hidden )
+
+            // if (found === undefined) {
+            //     oldProperties.forEach(item => newProperties.push(item));
+            //     newProperties.push(prop);
+            // }
+            // else{
+            //     oldProperties.forEach(item=> {
+            //             if(item !== prop){
+            //                 newProperties.push(item);
+            //             }
+            //         }
+            //     );
+            // }
         },
         deleteProd({commit}, product){
             commit('deleteProduct', product.id);
@@ -203,3 +198,39 @@ export const store = new Vuex.Store({
         }
     }
 })
+
+
+
+
+
+
+// sortBy({commit}, order){
+//     const prods = this.state.products;
+//     const sortedCol = this.state.allProps.find((item)=>item.sortBy === true);
+//     const prop = sortedCol.title
+//     const orderBy = order;
+//     // console.log(orderBy)
+//     // console.log(prop);
+//     function dynamicSort(property,order) {
+//         var sort_order = 1;
+//         if(order === false){
+//             sort_order = -1;
+//         }
+//         return function (a, b){
+//             // a should come before b in the sorted order
+//             if(a[property] < b[property]){
+//                 return -1 * sort_order;
+//                 // a should come after b in the sorted order
+//             }else if(a[property] > b[property]){
+//                 return 1 * sort_order;
+//                 // a and b are the same
+//             }else{
+//                 return 0 * sort_order;
+//             }
+//         }
+//     }
+//
+//     prods.sort(dynamicSort(prop, orderBy));
+//     commit('setProducts', prods);
+//     console.log(this.state.products);
+// },
