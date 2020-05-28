@@ -5,10 +5,9 @@
 <!--          <span @click="selectProduct({id: 1, title: 'some', selected: false})"> CLICK ME PLEASE</span>-->
 <!--          {{selectedProducts}}-->
 <!--      </span>-->
+      <!--              @click="selectAll"-->
       <div
      >
-<!--          @click="this.letsSort"-->
-          hello
           {{selectedItems}}
       </div>
       <ControlPanel />
@@ -21,6 +20,7 @@
               :shownProds="this.shownProds"
               :setOrder="this.setOrder"
               :currentOrder="this.currentOrder"
+              :updateSelectedItems="this.updateSelectedItems"
       />
 
 
@@ -39,23 +39,22 @@ export default {
 
     data() {
         return {
-            // selectedItems: [1, 2],
+            selectedItems: [],
             currentOrder: 'asc',
         }
     },
     computed: {
-        selectedItems(){
-            const selectedItems = [1,2];
-            return selectedItems;
-            // console.log(this.prodsThisPage.filter(i => i.selected).map(i => i.id))
-            // return this.prodsThisPage.filter(i => i.selected).map(i => i.id)
-        },
+        // selectedItems(){
+        //     const selectedItems = [1,2];
+        //     return selectedItems;
+        //     // console.log(this.prodsThisPage.filter(i => i.selected).map(i => i.id))
+        //     // return this.prodsThisPage.filter(i => i.selected).map(i => i.id)
+        // },
         placedProps() {
             const allProps = this.$store.state.allProps;
             const placedProps = allProps.filter(item => item.placed === true)
             return placedProps;
         },
-
         allProducts() {
             const allProducts = this.$store.state.products;
             const sortedCol = this.placedProps.find((item)=>item.sortBy === true);
@@ -105,8 +104,9 @@ export default {
             console.log(this.selectedItems)
         },
         selectAll() {
-            const arrId = [];
-            this.prodsThisPage.filter(item => arrId.push(item.id));
+            const ids = this.prodsThisPage.map(item=> item.id)
+            this.selectedItems = [...this.selectedItems, ...ids];
+            this.selectedItems = Array.from(new Set(this.selectedItems))
         },
         setOrder(){
             const order = this._data.currentOrder;
@@ -117,22 +117,12 @@ export default {
                 this._data.currentOrder = 'asc'
             }
         },
-
-        // sortBy (order){
-        //     const prods = this.allProducts;
-        //     const sortedCol = this.placedProps.find((item)=>item.sortBy === true);
-        //     const property = sortedCol.title
-        //     // console.log(orderBy)
-        //     // console.log(prop);
-        //
-        //     prods.sort(dynamicSort(property, order));
-        //
-        //     // commit('setProducts', prods);
-        //     // console.log(this.state.products);
-        //     // const sortedCol = this.state.allProps.find((item)=>item.sortBy === true);
-        //
-        // },
+        updateSelectedItems(newItems){
+            this.selectedItems = [ ...newItems, ]
+            this.selectedItems = Array.from(new Set(this.selectedItems))
+        },
     },
+
 
     components: {
         Table,

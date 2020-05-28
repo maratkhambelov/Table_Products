@@ -3,17 +3,17 @@
         <span>
 
             <div
-            @click="selectAll">
+            @click="selectEveryItem">
                 clickme
             </div>
-            {{selItems}}
+            {{sellProds}}
         </span>
     <tr v-for="product in prodsThisPage"
         :key="product.id">
         <td>
             <CustomCheckbox
-                    :val="product.id"
-                    v-model="selItems"
+                    :value="product.id"
+                    v-model="sellProds"
             />
         </td>
         <template v-for="(value,name) in product">
@@ -56,29 +56,46 @@ import CustomCheckbox from './Checkbox';
             addItem:{
                 type: Function
             },
+            updateSelectedItems:{
+                type: Function
+            },
         },
         data () {
           return{
-              selItems: [3,4]
+              sellProds: [],
           }
         },
         components:{
             CustomCheckbox,
         },
+        watch: {
+            sellProds: function(){
+                this._props.updateSelectedItems(this._data.sellProds)
+            },
+            // selectedItems: function () {
+            //     this._data.sellProds = this._props.selectedItems
+            // }
+        },
+        computed:{
+            idsCurrentPage(){
+                const ids = this._props.prodsThisPage.map(item=> item.id)
+                return ids
+            },
+        },
         methods: {
-
             deleteProduct(product){
-                    this.$store.dispatch('deleteProd', product);
+                console.log(product)
+                const newProds = this._data.sellProds.filter(item=> item !== product.id)
+                console.log(newProds)
+                this._data.sellProds = newProds
+                this.$store.dispatch('deleteProd', product);
             },
-            handleSelItems(id){
-                // this._data.selItems.push(id);
-                console.log(id);
-                console.log(this._props);
-                this._props.addItem(id);
+            selectEveryItem() {
+                const ids = this.idsCurrentPage;
+                this._data.sellProds = [...this._data.sellProds, ...ids];
+                this._data.sellProds = Array.from(new Set(this._data.sellProds));
             },
-            // ascDescSort(){
-            //     this.$store.dispatch('sortBy');
-            // },
+
             // selectAll(){
             //     // console.log( this._data.selectedItems);
             //     const arrId = [];

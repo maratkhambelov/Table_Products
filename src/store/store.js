@@ -97,8 +97,6 @@ export const store = new Vuex.Store({
                     }
                     return item
                 })
-
-
             commit('setAllProps', props);
         },
 
@@ -118,14 +116,9 @@ export const store = new Vuex.Store({
         },
         setProperty({commit}, prop) {
             const props = this.getters.properties;
-
-            console.log(props)
-            // const idxCurrentProp = props.indexOf(currentProp);
-            // console.log(idxCurrentProp)
             if(prop.sortBy === true){
                 const foundItem = props.find(item=> item.placed && !item.hidden && !item.sortBy)
                 foundItem.sortBy = true;
-                // newProps = [...newProps, ...foundItem]
             }
             let newProps = props.filter(item=>{
                 if(item.id === prop.id){
@@ -135,11 +128,7 @@ export const store = new Vuex.Store({
                 return item;
             })
 
-            console.log(newProps)
-            console.log(commit)
-            // commit('setAllProps', newProps);
-
-
+            commit('setAllProps', newProps);
             // const newProps.filter(item=> item.placed && !item.hidden )
 
             // if (found === undefined) {

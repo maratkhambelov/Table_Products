@@ -3,7 +3,11 @@
 
     <tr>
         <td>
-            <input type="checkbox">
+            <CheckboxAll
+                    :value="idsCurrentPage"
+                    v-model="sellProds"
+            />
+                <!--            :value=""-->
         </td>
         <template v-for="property in shownProps">
             <td v-if="property.sortBy !== true"
@@ -33,8 +37,13 @@
 </template>
 
 <script>
+    import CheckboxAll from "@/CheckboxAll";
     export default {
+        components: {CheckboxAll},
         props:{
+            updateSelectedItems:{
+                type: Function
+            },
             setOrder:{
                 type: Function
             },
@@ -51,6 +60,16 @@
                 type: Array,
             }
         },
+        data () {
+            return{
+                sellProds: [],
+            }
+        },
+        watch: {
+            sellProds: function(){
+                this._props.updateSelectedItems(this._data.sellProds)
+            }
+        },
         // data() {
             // return {
             //     order: this._props.currentOrder,
@@ -61,6 +80,10 @@
                 return this.$store.state.products
             },
 
+            idsCurrentPage(){
+                const ids = this._props.prodsThisPage.map(item=> item.id)
+                return ids
+            },
             shownProps(){
                 const placedProps = this._props.placedProps;
                 const propSortBy = placedProps.filter(item=> item.sortBy === true);
@@ -68,17 +91,7 @@
                 const finalProps = [...propSortBy, ...seenProps]
                 return finalProps;
             },
-            // product(){
-            //     return this.$store.state.products.find(item=>item)
-            // },
-            // properties(){
-            //     const shownProps = this.$store.state.allProps.filter(item=> item.seen === true);
-            //     console.log(shownProps);
-            //     return shownProps;
-            // },
-            // asc(){
-            //     return true;
-            // }
+
         },
         // computed:{
 
@@ -87,16 +100,14 @@
             // toggleAsc(){
             //   this._data.asc = !this._data.asc
             // },
-
+            selectAll() {
+                const ids = this.idsCurrentPage;
+                this._data.sellProds = [...this._data.sellProds, ...ids];
+                this._data.sellProds = Array.from(new Set(this._data.sellProds));
+            },
             toggleOrder() {
                 this._props.setOrder();
                 console.log(this._props.currentOrder)
-                // const firstColumn = this._props.prodsThisPage.find((item, i)=>i===0);
-                // console.log(this._props.prodsThisPage)
-                // this.toggleAsc();
-                // firstColumn.order = this._data.asc;
-                // const order = this._data.asc;
-                // this.$store.dispatch('sortBy', order );
 
             },
         },

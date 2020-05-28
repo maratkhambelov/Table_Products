@@ -4,11 +4,14 @@
         <div>
         </div>
         <TableTrHead
+                :updateSelectedItems="this.updateSelectedItems"
                 :setOrder="this.setOrder"
                 :currentOrder="this.currentOrder"
                 :prodsThisPage="this.prodsThisPage"
                 :placedProps="this.placedProps"/>
-        <TableBody  :selectedItems="selectedItems"
+        <TableBody
+                :updateSelectedItems="this.updateSelectedItems"
+                :selectedItems="this.selectedItems"
                     :selectAll="this.selectAll"
                     :placedProps="this.placedProps"
                     :allProducts="this.allProducts"
@@ -25,6 +28,9 @@
         props: {
             setOrder:{
                 type: Function
+            },
+            updateSelectedItems:{
+              type: Function
             },
             currentOrder: {
                 type: String
