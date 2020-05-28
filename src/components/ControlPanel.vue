@@ -11,6 +11,12 @@
            </template>
        </span>
        <span>
+           <div
+           @click="removeItems">
+               {{selectedItems.length}}
+           </div>
+       </span>
+       <span>
            <span v-for="valueProdsPerPage in valuesProdsPerPage"
            :key="valueProdsPerPage"
            @click="handleProdsPerPage(valueProdsPerPage)">
@@ -59,6 +65,14 @@
     export default {
         name: 'ControlPanel',
         components: {
+        },
+        props:{
+            selectedItems: {
+                type: Array,
+            },
+            clearSelectedItems:{
+                type: Function
+            }
         },
         computed: {
             allProps(){
@@ -133,6 +147,10 @@
             handleSelect(prop){
                 this.$store.dispatch('setProperty', prop);
             },
+            removeItems(){
+                this._props.clearSelectedItems();
+                this.$store.dispatch('deleteProds', this._props.selectedItems)
+            }
         },
         created () {
         }

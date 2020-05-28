@@ -1,7 +1,7 @@
 <template>
     <input type="checkbox"
            :checked="shouldBeChecked"
-           :value="value"
+           :value="values"
            @change="updateAll"
     />
 </template>
@@ -13,7 +13,7 @@
             event: 'change'
         },
         props: {
-            value: {
+            values: {
                 type: Array,
             },
             modelValue: {
@@ -26,19 +26,29 @@
                 default: false
             }
         },
+        data(){
+          return{
+              allValues: []
+          }
+        },
         computed: {
             shouldBeChecked() {
-                if(this.modelValue.length !== 0) {
+                // console.log(this.value);
+                // console.log(this.modelValue)
+                // console.log(this.allValues)
+                const filteredArr = this.allValues.filter(val => this.values.includes(val));
+                // console.log(filteredArr)
+                if(filteredArr.length !== 0) {
                     // this.value.forEach(newItem=>{
                     //     this.modelValue.every(item=>{
                     //
                     //     });
                     // })
 
-                    return this.value
+                    return this.values
                 }
-                console.log(this.value)
-                return this.value
+
+                return false
 
                 // if(this.modelValue.includes(this.value)){
                 //     console.log('true')
@@ -57,17 +67,28 @@
         },
         methods: {
             updateAll(event) {
-                let isChecked = event.target.checked
-                // let newValue = [...this.modelValue]
-                const lengthValues = this.value.length;
-                let newValue = [];
-                if (isChecked) {
-                    // newValue.push(this.value)
-                    newValue = [...this.value];
-                } else {
-                    newValue.splice(0, lengthValues)
+
+                let bool = event.target.checked;
+                console.log(bool)
+                let newValues = [];
+                // const lengthValues = this.value.length;
+                if (bool) {
+                    newValues = [...this.values];
+                    this.allValues = [...this.allValues, ... newValues];
                 }
-                this.$emit('change', newValue)
+                else {
+                    // newValues.splice(0, lengthValues)
+                    // compare(this.allValues, newValues)
+                    console.log(this.values)
+                    const newArr = this.allValues.filter(val => !this.values.includes(val));
+                    console.log(newArr);
+
+                    this.allValues = [ ...newArr]// console.log(newArr)
+                }
+                newValues = [...this.allValues]
+                this.$emit('change', newValues)
+
+
             }
         }
     }

@@ -10,7 +10,6 @@ export const store = new Vuex.Store({
         // properties: [],
         // allProperties: ["id", "product", "calories", "fat", "carbs", "protein", "iron"],
         allProps: [
-
             {
                 id: 1,
                 title: 'product',
@@ -62,8 +61,8 @@ export const store = new Vuex.Store({
         currentProducts: 10,
     },
     getters: {
-        products: () => {
-            return this.state.products
+        products: (state) => {
+            return state.products
         },
         properties: (state) => {
             return state.allProps
@@ -129,20 +128,12 @@ export const store = new Vuex.Store({
             })
 
             commit('setAllProps', newProps);
-            // const newProps.filter(item=> item.placed && !item.hidden )
 
-            // if (found === undefined) {
-            //     oldProperties.forEach(item => newProperties.push(item));
-            //     newProperties.push(prop);
-            // }
-            // else{
-            //     oldProperties.forEach(item=> {
-            //             if(item !== prop){
-            //                 newProperties.push(item);
-            //             }
-            //         }
-            //     );
-            // }
+        },
+        deleteProds({commit}, arrIds){
+            const currentProds = this.getters.products;
+            const newProds = currentProds.filter(item=> !arrIds.includes(item.id))
+            commit('setProducts',newProds )
         },
         deleteProd({commit}, product){
             commit('deleteProduct', product.id);

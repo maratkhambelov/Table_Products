@@ -1,16 +1,12 @@
 
 <template>
   <div id="app">
-<!--      <span >-->
-<!--          <span @click="selectProduct({id: 1, title: 'some', selected: false})"> CLICK ME PLEASE</span>-->
-<!--          {{selectedProducts}}-->
-<!--      </span>-->
-      <!--              @click="selectAll"-->
-      <div
-     >
+      <div>
           {{selectedItems}}
       </div>
-      <ControlPanel />
+      <ControlPanel
+      :selectedItems="this.selectedItems"
+      :clearSelectedItems="this.clearSelectedItems"/>
       <Table  :selectedItems="this.selectedItems"
               :selectAll="this.selectAll"
               :placedProps="this.placedProps"
@@ -103,6 +99,9 @@ export default {
             this.selectedItems.push(id);
             console.log(this.selectedItems)
         },
+        clearSelectedItems(){
+            this._data.selectedItems = [];
+        },
         selectAll() {
             const ids = this.prodsThisPage.map(item=> item.id)
             this.selectedItems = [...this.selectedItems, ...ids];
@@ -130,7 +129,7 @@ export default {
     }
 }
 
-function dynamicSort(property, order = 'asc') {
+export function dynamicSort(property, order = 'asc') {
     let sort_order = 1;
     if(order === 'desc'){
         sort_order = -1;
@@ -148,7 +147,9 @@ function dynamicSort(property, order = 'asc') {
         }
     }
 }
-
+export function compare(a1, a2) {
+    return a1.length == a2.length && a1.every((v,i)=>v === a2[i])
+}
 getProducts();
 </script>
 
