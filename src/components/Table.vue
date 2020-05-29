@@ -177,6 +177,11 @@ components: {CheckboxAll},
                 this._props.updateSelectedItems(this._data.sellProds)
             },
 
+        },
+        mounted() {
+            this.$root.$on('eventing', data => {
+                this._data.sellProds = [...data];
+            });
         }
     }
 </script>

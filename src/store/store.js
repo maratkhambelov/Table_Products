@@ -59,6 +59,24 @@ export const store = new Vuex.Store({
         allValuesProdsPerPage: [10, 15, 20],
         productsPerPage: 10,
         currentProducts: 10,
+        prodsPerPage: [
+            {
+                value: 10,
+                label: '10 Per Page',
+                current: true
+            },
+            {
+                value: 15,
+                label: '15 Per Page',
+                current: false
+            },
+
+            {
+                value: 20,
+                label: '20 Per Page',
+                current: false
+            },
+        ],
     },
     getters: {
         products: (state) => {
@@ -66,7 +84,14 @@ export const store = new Vuex.Store({
         },
         properties: (state) => {
             return state.allProps
-        }
+        },
+        prodsPerPage: (state) =>{
+            return state.prodsPerPage
+        },
+        allProps: (state) => {
+            return state.allProps
+        },
+
     },
             // return state.products.map(({ id, quantity }) => {
             //     const product = rootState.products.all.find(product => product.id === id)

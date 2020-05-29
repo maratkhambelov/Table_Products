@@ -16,13 +16,26 @@
                {{selectedItems.length}}
            </div>
        </span>
-       <span>
-           <span v-for="valueProdsPerPage in valuesProdsPerPage"
-           :key="valueProdsPerPage"
-           @click="handleProdsPerPage(valueProdsPerPage)">
+
+       <select>
+           <option
+                   v-for="valueProdsPerPage in valuesProdsPerPage"
+                   :key="valueProdsPerPage"
+                   @click="handleProdsPerPage(valueProdsPerPage)">
                {{valueProdsPerPage}}
-           </span>
-       </span>
+           </option>
+       </select>
+
+<!--       <span>-->
+<!--           <span v-for="valueProdsPerPage in valuesProdsPerPage"-->
+<!--           :key="valueProdsPerPage"-->
+<!--           @click="handleProdsPerPage(valueProdsPerPage)">-->
+<!--               {{valueProdsPerPage}}-->
+<!--           </span>-->
+<!--       </span>-->
+
+
+
        <span>
            <div
                    @click="toBack">
@@ -62,6 +75,8 @@
 </template>
 
 <script>
+    import { mapGetters } from 'vuex';
+
     export default {
         name: 'ControlPanel',
         components: {
@@ -75,55 +90,32 @@
             }
         },
         computed: {
-            allProps(){
-                return this.$store.state.allProps;
-            },
-            // properties(){
-            //
-            //     return this.$store.state.allProperties;
-            // },
-            products() {
-                const productsStore = this.$store.state.products;
-                return productsStore;
-            },
+            ...mapGetters([
+                'prodsPerPage',
+                'allProps',
+                'products',
+            ]),
+
             firstProduct(){
                 let idxLastShownEl =  this.$store.state.currentProducts;
                 let prodsPerPage = this.$store.state.productsPerPage;
-                // if(idxLastShownEl < prodsPerPage) {
-                //
-                // }
                 let idxFirstShownEl = idxLastShownEl - prodsPerPage;
                 return idxFirstShownEl;
             },
             lastProduct(){
                 return this.$store.state.currentProducts;
             },
-            // checkedProps() {
-                // const properties = this.$store.state.properties;
-                // const allProps = this.$store.state.allProperties;
 
-                // const foundProps = properties.map(item=>{
-                //     allProps.forEach(item=>{
-                //         if()
-                //     })
-                // })
-            // },
-            // setChecked(prop){
-            //     const properties = this.$store.state.properties;
-            //     const found = properties.find(item=> item === prop);
-            //     if(found !== undefined) {
-            //         return true
-            //     }
-            //     return false;
-            // },
             valuesProdsPerPage(){
-                // const initialValue = this.$store.state.productsPerPage;
                 const valuesProds = this.$store.state.allValuesProdsPerPage;
+                console.log(valuesProds)
                 return valuesProds;
-                // return this.$store.state.productsPerPage;
-
-            }
+            },
+            // prodsPerPage(){
+            //
+            // }
         },
+
         methods: {
             handleProperties(property){
                 const props = this.allProps;
@@ -149,10 +141,27 @@
             },
             removeItems(){
                 this._props.clearSelectedItems();
+                this.$root.$emit('eventing', []);
                 this.$store.dispatch('deleteProds', this._props.selectedItems)
             }
         },
         created () {
         }
     }
+
+
+    // allProps(){
+    //     return this.$store.state.allProps;
+    // },
+    // properties(){
+    //
+    //     return this.$store.state.allProperties;
+    // },
+    // products() {
+    //     const productsStore = this.$store.state.products;
+    //     return productsStore;
+    // },
 </script>
+
+
+
