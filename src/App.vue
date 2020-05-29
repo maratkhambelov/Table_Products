@@ -6,7 +6,10 @@
       </div>
       <ControlPanel
       :selectedItems="this.selectedItems"
-      :clearSelectedItems="this.clearSelectedItems"/>
+      :clearSelectedItems="this.clearSelectedItems"
+      :idxFirstItemCurrent="this.idxFirstItemCurrent"
+      :idxLastItemCurrent="this.idxLastItemCurrent"
+      />
       <Table  :selectedItems="this.selectedItems"
               :selectAll="this.selectAll"
               :placedProps="this.placedProps"
@@ -28,6 +31,7 @@ import { getProducts } from './request.js';
 import Table from "@/components/Table";
 import {store} from './store/store.js'
 import ControlPanel from "@/components/ControlPanel";
+import {mapGetters} from "vuex";
 
 export default {
     name: 'App',
@@ -40,31 +44,59 @@ export default {
         }
     },
     computed: {
-        // selectedItems(){
-        //     const selectedItems = [1,2];
-        //     return selectedItems;
-        //     // console.log(this.prodsThisPage.filter(i => i.selected).map(i => i.id))
-        //     // return this.prodsThisPage.filter(i => i.selected).map(i => i.id)
-        // },
+        ...mapGetters([
+            'prodsPerPage',
+            'allProps',
+            'products',
+            'currentProducts',
+        ]),
         placedProps() {
             const allProps = this.$store.state.allProps;
             const placedProps = allProps.filter(item => item.placed === true)
             return placedProps;
         },
         allProducts() {
-            const allProducts = this.$store.state.products;
+            const allProducts = this.products;
             const sortedCol = this.placedProps.find((item)=>item.sortBy === true);
             const property = sortedCol.title
             const order = this._data.currentOrder;
             allProducts.sort(dynamicSort(property, order));
             return allProducts;
         },
+        activeProdsPerPage(){
+            return this.prodsPerPage.find(item=>item.active === true)
+        },
+        idxFirstItemCurrent(){
+            let idxLastShownEl =  this.currentProducts
+            let prodsPerPage = this.activeProdsPerPage
+            // console.log(prodsPerPage.value)
+            // console.log(prodsPerPage)
+            let idxFirstShownEl = idxLastShownEl - prodsPerPage.value;
+            // console.log(idxFirstShownEl)
+            if(idxFirstShownEl < 0 ){
+                idxFirstShownEl = 0;
+            }
+            return idxFirstShownEl;
+        },
+        idxLastItemCurrent(){
+            // let idxLastShownEl =  this.currentProducts.length;
+            // console.log(this.currentProducts)
+            console.log('THIS CURRENT PRODUCT : ' +  this.currentProducts)
+
+            return this.currentProducts
+        },
         prodsThisPage() {
-            let idxLastShownEl = this.$store.state.currentProducts;
-            let prodsPerPage = this.$store.state.productsPerPage;
-            let idxFirstShownEl = idxLastShownEl - prodsPerPage;
-            const shownProducts = this.shownProds;
-            const productsOnePage = [...shownProducts.slice(idxFirstShownEl, idxLastShownEl)];
+            // let idxLastShownEl =  this.currentProducts.length;
+            // console.log(this.idxFirstItemCurrent)
+            // console.log(this.idxLastItemCurrent)
+            const productsOnePage = [...this.shownProds.slice(this.idxFirstItemCurrent,this.idxLastItemCurrent )]
+            // const productsOnePage = this.shownProds
+            // console.log(productsOnePage)
+            // let idxLastShownEl = this.$store.state.currentProducts;
+            // let prodsPerPage = this.prodsPerPage
+            // console.log(prodsPerPage)
+            // let idxFirstShownEl = idxLastShownEl - prodsPerPage;
+            //...shownProducts.slice(idxFirstShownEl, idxLastShownEl)
             return productsOnePage;
         },
 
@@ -121,7 +153,9 @@ export default {
             this.selectedItems = Array.from(new Set(this.selectedItems))
         },
     },
-
+    // mounted(){
+    //
+    // },
 
     components: {
         Table,

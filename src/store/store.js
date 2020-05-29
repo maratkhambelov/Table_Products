@@ -7,8 +7,6 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
     state: {
         products: [],
-        // properties: [],
-        // allProperties: ["id", "product", "calories", "fat", "carbs", "protein", "iron"],
         allProps: [
             {
                 id: 1,
@@ -55,29 +53,31 @@ export const store = new Vuex.Store({
             },
 
         ],
-        shownProducts: [],
-        allValuesProdsPerPage: [10, 15, 20],
-        productsPerPage: 10,
+        // shownProducts: [],
+        // allValuesProdsPerPage: [10, 15, 20],
+        // productsPerPage: 10,
+        minCurrent: 0,
+        maxCurrent: 10,
         currentProducts: 10,
         prodsPerPage: [
             {
                 id:1,
                 value: 10,
                 label: '10 Per Page',
-                current: true
+                active: true
             },
             {
                 id:2,
                 value: 15,
                 label: '15 Per Page',
-                current: false
+                active: false
             },
 
             {
                 id:3,
                 value: 20,
                 label: '20 Per Page',
-                current: false
+                active: false
             },
         ],
     },
@@ -94,16 +94,16 @@ export const store = new Vuex.Store({
         allProps: (state) => {
             return state.allProps
         },
-
+        currentProducts: (state)=>{
+          return state.currentProducts
+        },
+        minCurrent: (state)=>{
+          return state.minCurrent
+        },
+        maxCurrent: (state)=>{
+            return state.maxCurrent
+        },
     },
-            // return state.products.map(({ id, quantity }) => {
-            //     const product = rootState.products.all.find(product => product.id === id)
-            //     return {
-            //         title: product.title,
-            //         price: product.price,
-            //         quantity
-            //     }
-            // })
     actions: {
         setAllProducts({commit}, products){
             commit('setProducts', products )
@@ -124,23 +124,59 @@ export const store = new Vuex.Store({
         },
 
         setProdsPerPageById({commit}, id){
-            const newProdsPerPage = this.state.prodsPerPage.map(item=>{
-                item.current = false;
+            const prevValue = this.getters.prodsPerPage.find(item=> item.active === true).value
+            const currentValue = this.getters.prodsPerPage.find(item=> item.id === id).value
+            const prodsLength = this.getters.products.length;
+            const min = this.getters.minCurrent
+            const max = this.getters.maxCurrent
+
+            const newProdsPerPage = this.getters.prodsPerPage.map(item=>{
+                item.active = false;
                 if(item.id === id){
-                    item.current = true
+                    item.active = true
                 }
                 return item;
             })
+            const difference = currentValue - prevValue;
+            let newMin = min
+            let newMax = max
+            if(max !== prodsLength) {
+                newMax = max + difference
+            }
+            else{
+                newMin = min - difference
+            }
+            commit('setMaxCurrent', newMax);
+            commit('setMinCurrent', newMin)
             commit('setProductsPerPage', newProdsPerPage);
-            console.log(this.state.productsPerPage);
         },
         nextPage({commit}){
-            const newValue = this.state.currentProducts + this.state.productsPerPage;
-            commit('setCurrentPage', newValue);
+            const activeProdsPerPage = this.getters.prodsPerPage.find(item=>item.active === true)
+            let newMin =this.getters.minCurrent + activeProdsPerPage.value;
+            let newMax = this.getters.maxCurrent + activeProdsPerPage.value;
+            if(newMax > this.getters.products.length) {
+                newMax = this.getters.products.length
+                newMin = this.getters.products.length - activeProdsPerPage.value
+            }
+            commit('setMinCurrent', newMin);
+            commit('setMaxCurrent', newMax);
         },
         backPage({commit}){
-            const newValue = this.state.currentProducts - this.state.productsPerPage;
-            commit('setCurrentPage', newValue);
+            const activeProdsPerPage = this.getters.prodsPerPage.find(item=>item.active === true)
+            let newMin =this.getters.minCurrent - activeProdsPerPage.value;
+            let newMax = this.getters.maxCurrent - activeProdsPerPage.value;
+            if(newMin < 0) {
+                newMin = 0
+                newMax = activeProdsPerPage.value
+            }
+            commit('setMinCurrent', newMin);
+            commit('setMaxCurrent', newMax);
+            // const activeProdsPerPage = this.getters.prodsPerPage.find(item=>item.active === true)
+            // let newValue = this.getters.currentProducts - activeProdsPerPage.value;
+            // // if(newValue < 10) {
+            // //     newValue = 10
+            // // }
+            // commit('setCurrentPage', newValue);
         },
         setProperty({commit}, prop) {
             const props = this.getters.properties;
@@ -170,24 +206,12 @@ export const store = new Vuex.Store({
         setShownProds({commit}, products){
             commit('setShownProducts', products);
         }
-        // addProperty({commit}, newProperty){
-        //     //
-        // }
-        // getProducts ({ commit }, id) {
-        //     // return the Promise via `store.dispatch()` so that we know
-        //     // when the data has been fetched
-        //     return getProducts(id).then(item => {
-        //         commit('setItem', { id, item })
-        //     })
-        // }
     },
     mutations: {
         setProducts(state, newProducts) {
             state.products = newProducts;
         },
-        // setProperties(state, newProperties){
-        //     state.properties = newProperties;
-        // },
+
         setAllProps(state, newProps){
             state.allProps = newProps;
         },
@@ -204,7 +228,13 @@ export const store = new Vuex.Store({
         },
         setShownProducts(state, items){
             state.shownProducts = items;
-        }
+        },
+        setMinCurrent(state, newValue){
+          state.minCurrent = newValue
+        },
+        setMaxCurrent(state, newValue){
+            state.maxCurrent = newValue
+        },
     }
 })
 

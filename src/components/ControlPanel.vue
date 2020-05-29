@@ -17,7 +17,7 @@
            </div>
        </span>
 
-       <select v-model="currentItemProdsPerPage">
+       <select v-model="activeItemProdsPerPage">
            <option
                    v-for="prodsPerPageItem in prodsPerPage"
                    :key="prodsPerPageItem.id"
@@ -42,9 +42,9 @@
                Back
            </div>
            <span>
-               {{firstProduct + 1}}
+               {{minCurrent + 1}}
                -
-               {{lastProduct}}
+               {{maxCurrent }}
                of
                {{products.length}}
            </span>
@@ -81,46 +81,55 @@
         name: 'ControlPanel',
         components: {
         },
+        computed: {
+            ...mapGetters([
+                'prodsPerPage',
+                'allProps',
+                'products',
+                'minCurrent',
+                'maxCurrent'
+            ]),
+
+            // firstProduct(){
+            //     let idxLastShownEl =  this.$store.state.currentProducts;
+            //     let prodsPerPage = this.$store.state.productsPerPage;
+            //     let idxFirstShownEl = idxLastShownEl - prodsPerPage;
+            //     return idxFirstShownEl;
+            // },
+            // lastProduct(){
+            //     return this.$store.state.currentProducts;
+            // },
+
+            // prodsPerPage(){
+            //
+            // }
+        },
         props:{
             selectedItems: {
                 type: Array,
             },
             clearSelectedItems:{
                 type: Function
+            },
+            idxFirstItemCurrent:{
+                type: Number,
+            },
+            idxLastItemCurrent:{
+                type: Number,
             }
         },
         data(){
           return{
-              currentItemProdsPerPage: 1,
+              activeItemProdsPerPage: 1,
           }
         },
         watch:{
-            currentItemProdsPerPage: function () {
-                this.$store.dispatch('setProdsPerPageById', this.currentItemProdsPerPage);
-                console.log(this.currentItemProdsPerPage)
+            activeItemProdsPerPage: function () {
+                this.$store.dispatch('setProdsPerPageById', this.activeItemProdsPerPage);
+                console.log(this.activeItemProdsPerPage)
             }
         },
-        computed: {
-            ...mapGetters([
-                'prodsPerPage',
-                'allProps',
-                'products',
-            ]),
 
-            firstProduct(){
-                let idxLastShownEl =  this.$store.state.currentProducts;
-                let prodsPerPage = this.$store.state.productsPerPage;
-                let idxFirstShownEl = idxLastShownEl - prodsPerPage;
-                return idxFirstShownEl;
-            },
-            lastProduct(){
-                return this.$store.state.currentProducts;
-            },
-
-            // prodsPerPage(){
-            //
-            // }
-        },
 
         methods: {
             handleProperties(property){
