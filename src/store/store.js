@@ -61,17 +61,20 @@ export const store = new Vuex.Store({
         currentProducts: 10,
         prodsPerPage: [
             {
+                id:1,
                 value: 10,
                 label: '10 Per Page',
                 current: true
             },
             {
+                id:2,
                 value: 15,
                 label: '15 Per Page',
                 current: false
             },
 
             {
+                id:3,
                 value: 20,
                 label: '20 Per Page',
                 current: false
@@ -105,10 +108,6 @@ export const store = new Vuex.Store({
         setAllProducts({commit}, products){
             commit('setProducts', products )
         },
-        // setAllProperties({commit}) {
-        //     // const newProperties =  [ "id", "product", "calories", "fat", "iron"];
-        //     commit('setAllProps', newProperties);
-        // },
         setFirstProperty({commit}, firstProp){
             const props = this.state.allProps
                 .map(item => {
@@ -124,10 +123,15 @@ export const store = new Vuex.Store({
             commit('setAllProps', props);
         },
 
-        //change later
-
-        setProdsPerPage({commit}, newValue){
-            commit('setProductsPerPage', newValue);
+        setProdsPerPageById({commit}, id){
+            const newProdsPerPage = this.state.prodsPerPage.map(item=>{
+                item.current = false;
+                if(item.id === id){
+                    item.current = true
+                }
+                return item;
+            })
+            commit('setProductsPerPage', newProdsPerPage);
             console.log(this.state.productsPerPage);
         },
         nextPage({commit}){

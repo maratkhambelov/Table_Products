@@ -17,15 +17,15 @@
            </div>
        </span>
 
-       <select>
+       <select v-model="currentItemProdsPerPage">
            <option
-                   v-for="valueProdsPerPage in valuesProdsPerPage"
-                   :key="valueProdsPerPage"
-                   @click="handleProdsPerPage(valueProdsPerPage)">
-               {{valueProdsPerPage}}
+                   v-for="prodsPerPageItem in prodsPerPage"
+                   :key="prodsPerPageItem.id"
+                   :value="prodsPerPageItem.id">
+               {{prodsPerPageItem.label}}
            </option>
        </select>
-
+<!--       @click="handleProdsPerPage(prodPerPage.value)"-->
 <!--       <span>-->
 <!--           <span v-for="valueProdsPerPage in valuesProdsPerPage"-->
 <!--           :key="valueProdsPerPage"-->
@@ -89,6 +89,17 @@
                 type: Function
             }
         },
+        data(){
+          return{
+              currentItemProdsPerPage: 1,
+          }
+        },
+        watch:{
+            currentItemProdsPerPage: function () {
+                this.$store.dispatch('setProdsPerPageById', this.currentItemProdsPerPage);
+                console.log(this.currentItemProdsPerPage)
+            }
+        },
         computed: {
             ...mapGetters([
                 'prodsPerPage',
@@ -106,11 +117,6 @@
                 return this.$store.state.currentProducts;
             },
 
-            valuesProdsPerPage(){
-                const valuesProds = this.$store.state.allValuesProdsPerPage;
-                console.log(valuesProds)
-                return valuesProds;
-            },
             // prodsPerPage(){
             //
             // }
