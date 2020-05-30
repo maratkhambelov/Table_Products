@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import {deleteProducts, getProducts} from "@/request";
 // import {getProducts} from '../request.js';
 
 Vue.use(Vuex)
@@ -90,9 +91,7 @@ export const store = new Vuex.Store({
         allProps: (state) => {
             return state.allProps
         },
-        currentProducts: (state)=>{
-          return state.currentProducts
-        },
+
         minCurrent: (state)=>{
           return state.minCurrent
         },
@@ -101,6 +100,20 @@ export const store = new Vuex.Store({
         },
     },
     actions: {
+        fetchProducts({commit}){
+            // console.log(getProducts());
+            getProducts()
+                .then((resProducts, rejected) => {
+
+                    if(rejected){
+                        throw new Error('error')
+                    }
+                    commit('setProducts', resProducts)
+                })
+                .catch((error) => {
+                    console.log(error.error);
+                });
+        },
         setPlacedAllProps( {commit, state}, newProps){
             const allProps = state.allProps;
             const nullPlacedProps = allProps.every(item=> item.placed === false);
@@ -113,14 +126,11 @@ export const store = new Vuex.Store({
             commit('setProducts', products )
         },
         setFirstProperty({commit}, firstProp){
-            const props = this.state.allProps
+            const props = [...this.getters.allProps]
                 .map(item => {
-                    item.sortBy = false;
-                    return item
-                })
-                .map(item => {
+                    item.sortBy = false
                     if(item.title === firstProp){
-                        item.sortBy = true;
+                        item.sortBy = true
                     }
                     return item
                 })
@@ -196,10 +206,28 @@ export const store = new Vuex.Store({
         deleteProds({commit}, arrIds){
             const currentProds = this.getters.products;
             const newProds = currentProds.filter(item=> !arrIds.includes(item.id))
-            commit('setProducts',newProds )
+            deleteProducts()
+                .then((resProducts, rejected) => {
+                    if(rejected){
+                        throw new Error('error')
+                    }
+                    commit('setProducts',newProds)
+                })
+                .catch((error) => {
+                    console.log(error.error);
+                });
         },
         deleteProd({commit}, id){
-            commit('deleteProduct', id);
+            deleteProducts()
+                .then((resProducts, rejected) => {
+                    if(rejected){
+                        throw new Error('error')
+                    }
+                    commit('deleteProduct', id);
+                })
+                .catch((error) => {
+                    console.log(error.error);
+                });
         },
         setShownProds({commit}, products){
             commit('setShownProducts', products);

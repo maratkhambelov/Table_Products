@@ -9,18 +9,15 @@
       :clearSelectedItems="this.clearSelectedItems"
       />
       <Table  :selectedItems="this.selectedItems"
-              :selectAll="this.selectAll"
               :placedProps="this.placedProps"
               :allProducts="this.allProducts"
               :prodsThisPage="this.prodsThisPage"
-              :addItem="this.addItem"
-              :shownProds="this.shownProds"
               :setOrder="this.setOrder"
               :currentOrder="this.currentOrder"
               :updateSelectedItems="this.updateSelectedItems"
               :openModal="this.openModal"
       />
-
+<!--      :selectAll="this.selectAll"-->
      <ModalWindow
              :deleteProd="this.deleteProd"
              :closeModal="this.closeModal"
@@ -30,7 +27,7 @@
 </template>
 
 <script>
-import { getProducts } from './request.js';
+// import { getProducts } from './request.js';
 import Table from "@/components/Table";
 import {store} from './store/store.js'
 import ControlPanel from "@/components/ControlPanel";
@@ -40,7 +37,11 @@ import ModalWindow from "@/components/ModalWindow";
 export default {
     name: 'App',
     store,
-
+    components: {
+        Table,
+        ControlPanel,
+        ModalWindow
+    },
     data() {
         return {
             selectedItems: [],
@@ -58,7 +59,7 @@ export default {
             'maxCurrent'
         ]),
         placedProps() {
-            const allProps = this.$store.state.allProps;
+            const allProps = this.allProps
             const placedProps = allProps.filter(item => item.placed === true)
             return placedProps;
         },
@@ -67,11 +68,16 @@ export default {
                 return []
             }
             const allProducts = this.products;
-            console.log(allProducts)
-            console.log(this.placedProps)
-            const sortedCol = this.placedProps.find((item)=>item.sortBy === true);
-            const property = sortedCol.title
+            const filteredPlacedProps = this.placedProps.filter(item=> !item.hidden && item.placed)
+            let sortedCol = this.placedProps.find((item)=>item.sortBy === true);
             const order = this._data.currentOrder;
+            if(sortedCol === undefined) {
+                sortedCol = filteredPlacedProps.find(item=> item)
+                if(sortedCol === undefined) {
+                    return allProducts
+                }
+            }
+            const property = sortedCol.title
             allProducts.sort(dynamicSort(property, order));
             return allProducts;
         },
@@ -149,10 +155,9 @@ export default {
     },
 
 
-    components: {
-        Table,
-        ControlPanel,
-        ModalWindow
+
+    created() {
+        this.$store.dispatch('fetchProducts')
     }
 }
 
@@ -174,10 +179,7 @@ export function dynamicSort(property, order = 'asc') {
         }
     }
 }
-export function compare(a1, a2) {
-    return a1.length == a2.length && a1.every((v,i)=>v === a2[i])
-}
-getProducts();
+
 </script>
 
 <style>
@@ -190,8 +192,3 @@ getProducts();
   margin-top: 60px;
 }
 </style>
-<!--seenProps(){-->
-<!--const allProps = this.$store.state.allProps;-->
-<!--const seenProps = allProps.filter(item => item.seen === true)-->
-<!--return seenProps;-->
-<!--},-->

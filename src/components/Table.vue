@@ -76,22 +76,35 @@
 <!--                    :addItem="this.addItem"/>-->
     </table>
 </template>
-export default {
-components: {CheckboxAll},
+<!--export default {-->
+<!--components: {CheckboxAll},-->
 
 <script>
     // import TableBody from "@/components/TableBody";
     // import TableTrHead from "@/components/TableTrHead";
     import CustomCheckbox from './Checkbox';
     import CheckboxAll from "@/CheckboxAll";
+    import {mapGetters} from "vuex";
+
     export default {
         name: 'Table',
         components: {
             CustomCheckbox,
             CheckboxAll
-
         },
         props: {
+            selectedItems: {
+                type: Array,
+            },
+            placedProps: {
+                type: Array,
+            },
+            allProducts: {
+                type: Array,
+            },
+            prodsThisPage: {
+                type: Array,
+            },
             setOrder: {
                 type: Function
             },
@@ -101,40 +114,28 @@ components: {CheckboxAll},
             currentOrder: {
                 type: String
             },
-            selectedItems: {
-                type: Array,
-            },
 
-            placedProps: {
-                type: Array,
-            },
-            allProducts: {
-                type: Array,
-            },
-            shownProds: {
-                type: Array,
-            },
-            prodsThisPage: {
-                type: Array,
-            },
-            addItem: {
-                type: Function
-            },
+
+
+
             openModal:{
                 type: Function
             },
 
         },
-
         data() {
             return {
                 selectedProds: [],
             }
         },
         computed: {
-            products() {
-                return this.$store.state.products
-            },
+            ...mapGetters([
+                'prodsPerPage',
+                'allProps',
+                'products',
+                'minCurrent',
+                'maxCurrent'
+            ]),
 
             idsCurrentPage() {
                 const ids = this._props.prodsThisPage.map(item => item.id)

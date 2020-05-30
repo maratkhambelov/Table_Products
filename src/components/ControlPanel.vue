@@ -17,14 +17,27 @@
            </div>
        </span>
 
-       <select v-model="activeItemProdsPerPage">
-           <option
+       <div>
+           {{activeItemProdsPerPage.label}}
+       </div>
+       <div>
+           <div
                    v-for="prodsPerPageItem in prodsPerPage"
                    :key="prodsPerPageItem.id"
-                   :value="prodsPerPageItem.id">
+                   :value="prodsPerPageItem.id"
+                   @click="handleProdsPerPage(prodsPerPageItem)"
+           >
                {{prodsPerPageItem.label}}
-           </option>
-       </select>
+           </div>
+       </div>
+<!--       <select v-model="activeItemProdsPerPage">-->
+<!--           <option-->
+<!--                   v-for="prodsPerPageItem in prodsPerPage"-->
+<!--                   :key="prodsPerPageItem.id"-->
+<!--                   :value="prodsPerPageItem.id">-->
+<!--               {{prodsPerPageItem.label}}-->
+<!--           </option>-->
+<!--       </select>-->
 <!--       @click="handleProdsPerPage(prodPerPage.value)"-->
 <!--       <span>-->
 <!--           <span v-for="valueProdsPerPage in valuesProdsPerPage"-->
@@ -114,41 +127,6 @@
 
     export default {
         name: 'ControlPanel',
-        components: {
-        },
-        computed: {
-            ...mapGetters([
-                'prodsPerPage',
-                'allProps',
-                'products',
-                'minCurrent',
-                'maxCurrent'
-            ]),
-            seenProperties() {
-                // console.log(this.allProps)
-                const seenProps = this.allProps.filter(item => item.title !== 'id')
-                // const colSortBy = seenProps.find(item=>item.sortBy === true)
-                // if(colSortBy === undefined) {
-                //     const found = this.allProps.find(item=> item.placed === true && !item.hidden);
-                //     console.log(found)
-                //     this.handleProperties(found)
-                // }
-                    return seenProps
-            },
-            placedProps() {
-                return this.allProps.filter(item => item.placed === true && item.title !== 'id')
-            },
-            // shouldBeChecked() {
-            //
-            //     const isContainsAll = this.seenProperties.every(val => this.placedProps.includes(val))
-            //
-            //     if (isContainsAll === true) {
-            //         return true
-            //     }
-            //
-            //     return false
-            // },
-        },
         props:{
             selectedItems: {
                 type: Array,
@@ -159,16 +137,39 @@
 
         },
         data(){
-          return{
-              activeItemProdsPerPage: 1,
-              selectedProps:[],
-              isOpenedDropdown: false,
-              selectedAll: false,
-          }
+            return{
+                activeItemProdsPerPage:   {
+                    id:1,
+                    value: 10,
+                    label: '10 Per Page',
+                    active: true
+                },
+                selectedProps:[],
+                isOpenedDropdown: false,
+                selectedAll: false,
+            }
         },
+        computed: {
+            ...mapGetters([
+                'prodsPerPage',
+                'allProps',
+                'products',
+                'minCurrent',
+                'maxCurrent'
+            ]),
+            seenProperties() {
+                const seenProps = this.allProps.filter(item => item.title !== 'id')
+                return seenProps
+            },
+            placedProps() {
+                return this.allProps.filter(item => item.placed === true && item.title !== 'id')
+            },
+
+        },
+
         watch:{
             activeItemProdsPerPage: function () {
-                this.$store.dispatch('setProdsPerPageById', this.activeItemProdsPerPage);
+                this.$store.dispatch('setProdsPerPageById', this.activeItemProdsPerPage.id);
                 console.log(this.activeItemProdsPerPage)
             },
             placedProps: function() {
@@ -199,9 +200,10 @@
             toggleDropdown(){
               this._data.isOpenedDropdown = !this._data.isOpenedDropdown;
             },
-            // handleProdsPerPage(newValue){
-            //     this.$store.dispatch('setProdsPerPage', newValue);
-            // },
+            handleProdsPerPage(newValue){
+                console.log(newValue)
+                this._data.activeItemProdsPerPage = newValue
+            },
             toBack(){
                 this.$store.dispatch('backPage');
             },
