@@ -8,7 +8,7 @@
             <td>
                 <CheckboxAll
                         :values="idsCurrentPage"
-                        v-model="sellProds"
+                        v-model="selectedProds"
                 />
                 <!--            :value=""-->
             </td>
@@ -35,17 +35,15 @@
 
             <div
                 >
-<!--                @click="selectAll"-->
-<!--                clickme-->
             </div>
-            {{sellProds}}
+            {{selectedProds}}
         </span>
             <tr v-for="product in prodsThisPage"
                 :key="product.id">
                 <td>
                     <CustomCheckbox
                             :value="product.id"
-                            v-model="sellProds"
+                            v-model="selectedProds"
                     />
                 </td>
                 <template v-for="(value,name) in product">
@@ -54,10 +52,10 @@
                     </td>
                 </template>
                 <td>
-                    <button
-                            @click="deleteProduct(product)">
+                    <div
+                            @click="openModal(product)">
                         delete
-                    </button>
+                    </div>
                 </td>
             </tr>
         </div>
@@ -106,9 +104,7 @@ components: {CheckboxAll},
             selectedItems: {
                 type: Array,
             },
-            // selectAll: {
-            //     type: Function,
-            // },
+
             placedProps: {
                 type: Array,
             },
@@ -124,17 +120,15 @@ components: {CheckboxAll},
             addItem: {
                 type: Function
             },
+            openModal:{
+                type: Function
+            },
 
         },
-        // data () {
-        //     return {
-        //         selectedItems: [1,2],
-        //     }
-        // },
 
         data() {
             return {
-                sellProds: [],
+                selectedProds: [],
             }
         },
         computed: {
@@ -157,30 +151,31 @@ components: {CheckboxAll},
         methods: {
             selectAll() {
                 const ids = this.idsCurrentPage;
-                this._data.sellProds = [...this._data.sellProds, ...ids];
-                this._data.sellProds = Array.from(new Set(this._data.sellProds));
+                this._data.selectedProds = [...this._data.selectedProds, ...ids];
+                this._data.selectedProds = Array.from(new Set(this._data.selectedProds));
             },
             toggleOrder() {
                 this._props.setOrder();
                 console.log(this._props.currentOrder)
             },
             deleteProduct(product){
-                console.log(product)
-                const newProds = this._data.sellProds.filter(item=> item !== product.id)
-                console.log(newProds)
-                this._data.sellProds = newProds
+
+                const newProds = this._data.selectedProds.filter(item=> item !== product.id)
+                this._data.selectedProds = newProds
+                // this.$root.$on('openModal', product => {
+                //     return product;
+                // });
                 this.$store.dispatch('deleteProd', product);
             },
         },
         watch: {
-            sellProds: function () {
-                this._props.updateSelectedItems(this._data.sellProds)
+            selectedProds: function () {
+                this._props.updateSelectedItems(this._data.selectedProds)
             },
-
         },
         mounted() {
             this.$root.$on('eventing', data => {
-                this._data.sellProds = [...data];
+                this._data.selectedProds = [...data];
             });
         }
     }

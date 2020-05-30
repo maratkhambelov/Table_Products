@@ -53,12 +53,8 @@ export const store = new Vuex.Store({
             },
 
         ],
-        // shownProducts: [],
-        // allValuesProdsPerPage: [10, 15, 20],
-        // productsPerPage: 10,
         minCurrent: 0,
         maxCurrent: 10,
-        currentProducts: 10,
         prodsPerPage: [
             {
                 id:1,
@@ -105,6 +101,14 @@ export const store = new Vuex.Store({
         },
     },
     actions: {
+        setPlacedAllProps( {commit, state}, newProps){
+            const allProps = state.allProps;
+            const nullPlacedProps = allProps.every(item=> item.placed === false);
+            if(nullPlacedProps === true) {
+                console.log(nullPlacedProps)
+            }
+            commit('setAllProps', newProps)
+        },
         setAllProducts({commit}, products){
             commit('setProducts', products )
         },
@@ -171,12 +175,6 @@ export const store = new Vuex.Store({
             }
             commit('setMinCurrent', newMin);
             commit('setMaxCurrent', newMax);
-            // const activeProdsPerPage = this.getters.prodsPerPage.find(item=>item.active === true)
-            // let newValue = this.getters.currentProducts - activeProdsPerPage.value;
-            // // if(newValue < 10) {
-            // //     newValue = 10
-            // // }
-            // commit('setCurrentPage', newValue);
         },
         setProperty({commit}, prop) {
             const props = this.getters.properties;
@@ -200,8 +198,8 @@ export const store = new Vuex.Store({
             const newProds = currentProds.filter(item=> !arrIds.includes(item.id))
             commit('setProducts',newProds )
         },
-        deleteProd({commit}, product){
-            commit('deleteProduct', product.id);
+        deleteProd({commit}, id){
+            commit('deleteProduct', id);
         },
         setShownProds({commit}, products){
             commit('setShownProducts', products);

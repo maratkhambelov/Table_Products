@@ -7,8 +7,6 @@
       <ControlPanel
       :selectedItems="this.selectedItems"
       :clearSelectedItems="this.clearSelectedItems"
-      :idxFirstItemCurrent="this.idxFirstItemCurrent"
-      :idxLastItemCurrent="this.idxLastItemCurrent"
       />
       <Table  :selectedItems="this.selectedItems"
               :selectAll="this.selectAll"
@@ -20,9 +18,14 @@
               :setOrder="this.setOrder"
               :currentOrder="this.currentOrder"
               :updateSelectedItems="this.updateSelectedItems"
+              :openModal="this.openModal"
       />
 
-
+     <ModalWindow
+             :deleteProd="this.deleteProd"
+             :closeModal="this.closeModal"
+             :isOpenedModal="this.isOpenedModal"
+     />
   </div>
 </template>
 
@@ -32,6 +35,7 @@ import Table from "@/components/Table";
 import {store} from './store/store.js'
 import ControlPanel from "@/components/ControlPanel";
 import {mapGetters} from "vuex";
+import ModalWindow from "@/components/ModalWindow";
 
 export default {
     name: 'App',
@@ -41,6 +45,8 @@ export default {
         return {
             selectedItems: [],
             currentOrder: 'asc',
+            shouldDeleteId: 0,
+            isOpenedModal: false,
         }
     },
     computed: {
@@ -48,7 +54,8 @@ export default {
             'prodsPerPage',
             'allProps',
             'products',
-            'currentProducts',
+            'minCurrent',
+            'maxCurrent'
         ]),
         placedProps() {
             const allProps = this.$store.state.allProps;
@@ -56,47 +63,24 @@ export default {
             return placedProps;
         },
         allProducts() {
+            if(this.placedProps.length === 0) {
+                return []
+            }
             const allProducts = this.products;
+            console.log(allProducts)
+            console.log(this.placedProps)
             const sortedCol = this.placedProps.find((item)=>item.sortBy === true);
             const property = sortedCol.title
             const order = this._data.currentOrder;
             allProducts.sort(dynamicSort(property, order));
             return allProducts;
         },
-        activeProdsPerPage(){
-            return this.prodsPerPage.find(item=>item.active === true)
-        },
-        idxFirstItemCurrent(){
-            let idxLastShownEl =  this.currentProducts
-            let prodsPerPage = this.activeProdsPerPage
-            // console.log(prodsPerPage.value)
-            // console.log(prodsPerPage)
-            let idxFirstShownEl = idxLastShownEl - prodsPerPage.value;
-            // console.log(idxFirstShownEl)
-            if(idxFirstShownEl < 0 ){
-                idxFirstShownEl = 0;
-            }
-            return idxFirstShownEl;
-        },
-        idxLastItemCurrent(){
-            // let idxLastShownEl =  this.currentProducts.length;
-            // console.log(this.currentProducts)
-            console.log('THIS CURRENT PRODUCT : ' +  this.currentProducts)
 
-            return this.currentProducts
-        },
         prodsThisPage() {
-            // let idxLastShownEl =  this.currentProducts.length;
-            // console.log(this.idxFirstItemCurrent)
-            // console.log(this.idxLastItemCurrent)
-            const productsOnePage = [...this.shownProds.slice(this.idxFirstItemCurrent,this.idxLastItemCurrent )]
-            // const productsOnePage = this.shownProds
-            // console.log(productsOnePage)
-            // let idxLastShownEl = this.$store.state.currentProducts;
-            // let prodsPerPage = this.prodsPerPage
-            // console.log(prodsPerPage)
-            // let idxFirstShownEl = idxLastShownEl - prodsPerPage;
-            //...shownProducts.slice(idxFirstShownEl, idxLastShownEl)
+
+            const min = this.minCurrent;
+            const max = this.maxCurrent
+            const productsOnePage = [...this.shownProds.slice(min,max)]
             return productsOnePage;
         },
 
@@ -116,20 +100,16 @@ export default {
                             newItemAsArr.push(property);
                         }
                     })
-
                 }))
                 const newItem = Object.fromEntries(newItemAsArr);
                 shownProducts.push(newItem);
             })
             return shownProducts;
         },
-
     },
     methods: {
         addItem(id){
-            console.log(id);
             this.selectedItems.push(id);
-            console.log(this.selectedItems)
         },
         clearSelectedItems(){
             this._data.selectedItems = [];
@@ -152,14 +132,27 @@ export default {
             this.selectedItems = [ ...newItems, ]
             this.selectedItems = Array.from(new Set(this.selectedItems))
         },
+        openModal(product){
+            this._data.isOpenedModal = true
+            this._data.shouldDeleteId = product.id
+        },
+        closeModal(){
+            this._data.isOpenedModal = false
+        },
+        deleteProd(){
+            const newProds = this._data.selectedItems.filter(item=> item.id !== this._data.shouldDeleteId)
+            this._data.selectedItems = newProds
+            this._data.isOpenedModal = false
+            this.$store.dispatch('deleteProd', this._data.shouldDeleteId);
+            this._data.shouldDeleteId = 0
+        }
     },
-    // mounted(){
-    //
-    // },
+
 
     components: {
         Table,
-        ControlPanel
+        ControlPanel,
+        ModalWindow
     }
 }
 
