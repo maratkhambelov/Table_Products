@@ -1,26 +1,20 @@
 <template>
    <div>
-       <span>Sorting by:</span>
-       <span>
-           <template v-for="prop in allProps">
-               <span v-if="prop.title !== 'id'"
-                       :key="prop.id"
-                       @click="handleProperties(prop.title)">
-                   {{prop.title}}
-               </span>
-           </template>
-       </span>
-       <span>
-           <div
-           @click="removeItems">
-               {{selectedItems.length}}
-           </div>
-       </span>
+       <SortingBy
+       :allProps="this.allProps"
+       :handleProperties="this.handleProperties"
+       />
 
-       <div>
-           {{activeItemProdsPerPage.label}}
-       </div>
-       <div>
+      <Button
+      :onHandle="this.removeItems"
+      :label="this.selectedItems.length"
+      />
+
+<!--       <div>-->
+<!--           {{activeItemProdsPerPage.label}}-->
+<!--       </div>-->
+       <Dropdown
+       :currentValue="this.activeItemProdsPerPage.label">
            <div
                    v-for="prodsPerPageItem in prodsPerPage"
                    :key="prodsPerPageItem.id"
@@ -29,94 +23,68 @@
            >
                {{prodsPerPageItem.label}}
            </div>
-       </div>
-<!--       <select v-model="activeItemProdsPerPage">-->
-<!--           <option-->
+       </Dropdown>
+       <Navigation/>
+
+<!--       <div>-->
+<!--           <div-->
 <!--                   v-for="prodsPerPageItem in prodsPerPage"-->
 <!--                   :key="prodsPerPageItem.id"-->
-<!--                   :value="prodsPerPageItem.id">-->
+<!--                   :value="prodsPerPageItem.id"-->
+<!--                   @click="handleProdsPerPage(prodsPerPageItem)"-->
+<!--           >-->
 <!--               {{prodsPerPageItem.label}}-->
-<!--           </option>-->
-<!--       </select>-->
-<!--       @click="handleProdsPerPage(prodPerPage.value)"-->
+<!--           </div>-->
+<!--       </div>-->
+
+
+
 <!--       <span>-->
-<!--           <span v-for="valueProdsPerPage in valuesProdsPerPage"-->
-<!--           :key="valueProdsPerPage"-->
-<!--           @click="handleProdsPerPage(valueProdsPerPage)">-->
-<!--               {{valueProdsPerPage}}-->
+<!--           <div-->
+<!--                   @click="toBack">-->
+<!--               Back-->
+<!--           </div>-->
+<!--           <span>-->
+<!--               {{minCurrent + 1}}-->
+<!--               - -->
+<!--               {{maxCurrent }}-->
+<!--               of-->
+<!--               {{products.length}}-->
 <!--           </span>-->
+<!--           <div-->
+<!--           @click="toNext">-->
+<!--               Next-->
+<!--           </div>-->
 <!--       </span>-->
-
-
-
-       <span>
-           <div
-                   @click="toBack">
-               Back
+       <Dropdown
+       :current-value="placedProps.length + ' columns selected'">
+           <div>
+               <label>
+                   <input
+                           @change="selectAllProps"
+                           type="checkbox"
+                           v-model="selectedAll"
+                   >
+                   SelectAll
+               </label>
            </div>
-           <span>
-               {{minCurrent + 1}}
-               -
-               {{maxCurrent }}
-               of
-               {{products.length}}
-           </span>
-           <div
-           @click="toNext">
-               Next
+           <div v-for="prop in seenProperties"
+                :value="prop"
+                :key="prop.id">
+               <label>
+                   <input type="checkbox" v-model="prop.placed">
+                   {{prop.title}}
+               </label>
            </div>
-       </span>
-       <span>
-           <div @click="toggleDropdown">
-               {{placedProps.length}} columns selected
-           </div>
-           <div v-if="isOpenedDropdown">
-               <div>
-                   <label>
-                       <input
-                               @change="selectAllProps"
-                              type="checkbox"
-                              v-model="selectedAll"
-                       >
-                       SelectAll
-                   </label>
-               </div>
-               <div v-for="prop in seenProperties"
-                    :value="prop"
-                    :key="prop.id">
-                   <label>
-                       <input type="checkbox" v-model="prop.placed">
-                       {{prop.title}}
-                   </label>
-               </div>
-           </div>
+       </Dropdown>
+<!--       <span>-->
+<!--           <div @click="toggleDropdown">-->
+<!--               {{placedProps.length}} columns selected-->
+<!--           </div>-->
+<!--           <div v-if="isOpenedDropdown">-->
 
-
-<!--           <select v-model="selectedProps" multiple>-->
-<!--               <option>-->
-<!--                   Select All-->
-<!--               </option>-->
-<!--               <option v-for="prop in seenProperties"-->
-<!--                       :value="prop"-->
-<!--                       :key="prop.id">-->
-<!--                   <label>-->
-<!--                       <input type="checkbox" v-model="prop.placed">-->
-<!--                       {{prop.title}}-->
-<!--                   </label>-->
-<!--               </option>-->
-<!--            </select>-->
-
-<!--             <span>-->
-<!--               <template v-for="prop in allProps">-->
-<!--                    <label v-if="prop.title !== 'id'"-->
-<!--                           :key="prop.id"-->
-<!--                           @click="handleSelect(prop)">-->
-<!--                           <input type="checkbox" v-model="prop.placed">-->
-<!--                           {{prop.title}}-->
-<!--                   </label>-->
-<!--               </template>-->
-<!--            </span>-->
-       </span>
+<!--           </div>-->
+<!--       </span>-->
 
    </div>
 
@@ -124,9 +92,14 @@
 
 <script>
     import { mapGetters } from 'vuex';
+    import SortingBy from "@/components/SortingBy/SortingBy";
+    import Button from "@/components/Button/Button";
+    import Dropdown from "@/components/Dropdown/Dropdown";
+    import Navigation from "@/components/Navigation/Navigation";
 
     export default {
         name: 'ControlPanel',
+        components: {Navigation, Dropdown, Button, SortingBy},
         props:{
             selectedItems: {
                 type: Array,
@@ -189,8 +162,6 @@
         methods: {
             handleProperties(property){
                 const props = this.allProps;
-                console.log(property)
-
                 const found = props.find(item=> item.placed === true && !item.hidden && item.title === property);
                 if(found !== undefined) {
                     this.$store.dispatch('setFirstProperty', property);
