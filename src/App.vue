@@ -73,12 +73,16 @@ export default {
             const order = this._data.currentOrder;
             if(sortedCol === undefined) {
                 sortedCol = filteredPlacedProps.find(item=> item)
-                if(sortedCol === undefined) {
+                if(filteredPlacedProps.length === 0) {
                     return allProducts
                 }
+
             }
             const property = sortedCol.title
+            sortedCol.sortBy = true
+            console.log(sortedCol)
             allProducts.sort(dynamicSort(property, order));
+
             return allProducts;
         },
 
@@ -151,6 +155,21 @@ export default {
             this._data.isOpenedModal = false
             this.$store.dispatch('deleteProd', this._data.shouldDeleteId);
             this._data.shouldDeleteId = 0
+        },
+        confirmDelete(obj){
+            if(obj instanceof Array) {
+                this.clearSelectedItems();
+                this.$store.dispatch('deleteProds', obj)
+                this._data.isOpenedModal = false
+            }
+            else{
+                this.$store.dispatch('deleteProd', obj.id)
+            }
+
+            // const newProds = this._data.selectedItems.filter(item=> item.id !== this._data.shouldDeleteId)
+            // this._data.selectedItems = newProds
+            // this.$store.dispatch('deleteProd', this._data.shouldDeleteId);
+            // this._data.shouldDeleteId = 0
         }
     },
 

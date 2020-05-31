@@ -92,7 +92,9 @@
                 return seenProps
             },
             placedProps() {
+                // this.$store.dispatch('setProperty', sortedCol)
                 return this.allProps.filter(item => item.placed === true && item.title !== 'id')
+
             },
 
         },
@@ -103,7 +105,6 @@
                 console.log(this.activeItemProdsPerPage)
             },
             placedProps: function() {
-                console.log(this.placedProps)
                 const isContainsAll =  this.seenProperties.every(val=> this.placedProps.includes(val))
                 if(isContainsAll === true){
                     this._data.selectedAll = true
@@ -125,9 +126,9 @@
                 }
                 return
             },
-            toggleDropdown(){
-              this._data.isOpenedDropdown = !this._data.isOpenedDropdown;
-            },
+            // toggleDropdown(){
+            //   this._data.isOpenedDropdown = !this._data.isOpenedDropdown;
+            // },
             handleProdsPerPage(newValue){
                 console.log(newValue)
                 this._data.activeItemProdsPerPage = newValue

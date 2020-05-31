@@ -11,6 +11,7 @@
                             v-model="selectedProds"
                     />
                 </th>
+
                 <template
                         v-for="property in shownProps"
                 >
@@ -40,22 +41,12 @@
                             :name="name"
                     ></TdCell>
                 </template>
-<!--                <template v-for="(value,name) in product">-->
-<!--                    <td v-if="name !== 'id'" :key="name">-->
-<!--                        {{value}}-->
-<!--                    </td>-->
-<!--                </template>-->
                 <HandleCell
                 :onHandle="openModal"
                 :item="product">
                     delete
                 </HandleCell>
-<!--                <td>-->
-<!--                    <div-->
-<!--                            @click="openModal(product)">-->
-<!--                        delete-->
-<!--                    </div>-->
-<!--                </td>-->
+
             </tr>
         </div>
 
@@ -63,23 +54,6 @@
 <!--            -->
 <!--            {{selectedProds}}-->
 <!--        </span>-->
-
-        <!--            <template v-for="property in shownProps">-->
-        <!--                <td v-if="property.sortBy !== true"-->
-        <!--                    :key="property.id">-->
-        <!--                    {{property.title}}-->
-        <!--                </td>-->
-        <!--                <td v-else @click="toggleOrder"-->
-        <!--                    :key="property.id">-->
-        <!--                    {{property.title}}-->
-        <!--                    <div v-if="currentOrder === 'asc'">-->
-        <!--                        asc-->
-        <!--                    </div>-->
-        <!--                    <div v-else>-->
-        <!--                        desc-->
-        <!--                    </div>-->
-        <!--                </td>-->
-        <!--            </template>-->
 <!--        -->
 <!--        <TableTrHead-->
 <!--                :updateSelectedItems="this.updateSelectedItems"-->

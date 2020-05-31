@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import {deleteProducts, getProducts} from "@/request";
-// import {getProducts} from '../request.js';
 
 Vue.use(Vuex)
 
@@ -101,7 +100,6 @@ export const store = new Vuex.Store({
     },
     actions: {
         fetchProducts({commit}){
-            // console.log(getProducts());
             getProducts()
                 .then((resProducts, rejected) => {
 
@@ -114,12 +112,12 @@ export const store = new Vuex.Store({
                     console.log(error.error);
                 });
         },
-        setPlacedAllProps( {commit, state}, newProps){
-            const allProps = state.allProps;
-            const nullPlacedProps = allProps.every(item=> item.placed === false);
-            if(nullPlacedProps === true) {
-                console.log(nullPlacedProps)
-            }
+        setPlacedAllProps( {commit}, newProps){
+            // const allProps = state.allProps;
+            // const nullPlacedProps = allProps.every(item=> item.placed === false);
+            // if(nullPlacedProps === true) {
+            //     console.log(nullPlacedProps)
+            // }
             commit('setAllProps', newProps)
         },
         setAllProducts({commit}, products){
@@ -263,39 +261,3 @@ export const store = new Vuex.Store({
         },
     }
 })
-
-
-
-
-
-
-// sortBy({commit}, order){
-//     const prods = this.state.products;
-//     const sortedCol = this.state.allProps.find((item)=>item.sortBy === true);
-//     const prop = sortedCol.title
-//     const orderBy = order;
-//     // console.log(orderBy)
-//     // console.log(prop);
-//     function dynamicSort(property,order) {
-//         var sort_order = 1;
-//         if(order === false){
-//             sort_order = -1;
-//         }
-//         return function (a, b){
-//             // a should come before b in the sorted order
-//             if(a[property] < b[property]){
-//                 return -1 * sort_order;
-//                 // a should come after b in the sorted order
-//             }else if(a[property] > b[property]){
-//                 return 1 * sort_order;
-//                 // a and b are the same
-//             }else{
-//                 return 0 * sort_order;
-//             }
-//         }
-//     }
-//
-//     prods.sort(dynamicSort(prop, orderBy));
-//     commit('setProducts', prods);
-//     console.log(this.state.products);
-// },
