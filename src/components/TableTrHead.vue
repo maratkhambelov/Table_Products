@@ -37,7 +37,7 @@
 </template>
 
 <script>
-    import CheckboxAll from "@/CheckboxAll";
+    import CheckboxAll from "@/components/CheckboxAll";
     export default {
         components: {CheckboxAll},
         props:{

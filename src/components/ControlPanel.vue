@@ -4,15 +4,10 @@
        :allProps="this.allProps"
        :handleProperties="this.handleProperties"
        />
-
       <Button
       :onHandle="this.removeItems"
       :label="this.selectedItems.length"
       />
-
-<!--       <div>-->
-<!--           {{activeItemProdsPerPage.label}}-->
-<!--       </div>-->
        <Dropdown
        :currentValue="this.activeItemProdsPerPage.label">
            <div
@@ -25,37 +20,6 @@
            </div>
        </Dropdown>
        <Navigation/>
-
-<!--       <div>-->
-<!--           <div-->
-<!--                   v-for="prodsPerPageItem in prodsPerPage"-->
-<!--                   :key="prodsPerPageItem.id"-->
-<!--                   :value="prodsPerPageItem.id"-->
-<!--                   @click="handleProdsPerPage(prodsPerPageItem)"-->
-<!--           >-->
-<!--               {{prodsPerPageItem.label}}-->
-<!--           </div>-->
-<!--       </div>-->
-
-
-
-<!--       <span>-->
-<!--           <div-->
-<!--                   @click="toBack">-->
-<!--               Back-->
-<!--           </div>-->
-<!--           <span>-->
-<!--               {{minCurrent + 1}}-->
-<!--               - -->
-<!--               {{maxCurrent }}-->
-<!--               of-->
-<!--               {{products.length}}-->
-<!--           </span>-->
-<!--           <div-->
-<!--           @click="toNext">-->
-<!--               Next-->
-<!--           </div>-->
-<!--       </span>-->
        <Dropdown
        :current-value="placedProps.length + ' columns selected'">
            <div>
@@ -77,14 +41,7 @@
                </label>
            </div>
        </Dropdown>
-<!--       <span>-->
-<!--           <div @click="toggleDropdown">-->
-<!--               {{placedProps.length}} columns selected-->
-<!--           </div>-->
-<!--           <div v-if="isOpenedDropdown">-->
 
-<!--           </div>-->
-<!--       </span>-->
 
    </div>
 
@@ -175,12 +132,7 @@
                 console.log(newValue)
                 this._data.activeItemProdsPerPage = newValue
             },
-            toBack(){
-                this.$store.dispatch('backPage');
-            },
-            toNext(){
-                this.$store.dispatch('nextPage');
-            },
+
             // handleSelect(prop){
             //     this.$store.dispatch('setProperty', prop);
             // },

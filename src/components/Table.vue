@@ -4,40 +4,27 @@
         <div>
         </div>
         <thead>
-        <tr>
-            <td>
-                <CheckboxAll
-                        :values="idsCurrentPage"
-                        v-model="selectedProds"
-                />
-                <!--            :value=""-->
-            </td>
-            <template v-for="property in shownProps">
-                <td v-if="property.sortBy !== true"
-                    :key="property.id">
-                    {{property.title}}
-                </td>
-                <td v-else @click="toggleOrder"
-                    :key="property.id">
-                    {{property.title}}
-                    <div v-if="currentOrder === 'asc'">
-                        asc
-                    </div>
-                    <div v-else>
-                        desc
-                    </div>
-                </td>
-            </template>
-        </tr>
+            <tr>
+                <th>
+                    <CheckboxAll
+                            :values="idsCurrentPage"
+                            v-model="selectedProds"
+                    />
+                </th>
+                <template
+                        v-for="property in shownProps"
+                >
+                    <ThCell
+                            :key="property.id"
+                            :currentOrder="currentOrder"
+                            :toggle-order="toggleOrder"
+                            :property="property"
+                    >
+                    </ThCell>
+                </template>
+            </tr>
         </thead>
         <div>
-        <span>
-
-            <div
-                >
-            </div>
-            {{selectedProds}}
-        </span>
             <tr v-for="product in prodsThisPage"
                 :key="product.id">
                 <td>
@@ -47,18 +34,52 @@
                     />
                 </td>
                 <template v-for="(value,name) in product">
-                    <td v-if="name !== 'id'" :key="name">
-                        {{value}}
-                    </td>
+                    <TdCell
+                            :key="name"
+                            :value="value"
+                            :name="name"
+                    ></TdCell>
                 </template>
-                <td>
-                    <div
-                            @click="openModal(product)">
-                        delete
-                    </div>
-                </td>
+<!--                <template v-for="(value,name) in product">-->
+<!--                    <td v-if="name !== 'id'" :key="name">-->
+<!--                        {{value}}-->
+<!--                    </td>-->
+<!--                </template>-->
+                <HandleCell
+                :onHandle="openModal"
+                :item="product">
+                    delete
+                </HandleCell>
+<!--                <td>-->
+<!--                    <div-->
+<!--                            @click="openModal(product)">-->
+<!--                        delete-->
+<!--                    </div>-->
+<!--                </td>-->
             </tr>
         </div>
+
+<!--        <span>-->
+<!--            -->
+<!--            {{selectedProds}}-->
+<!--        </span>-->
+
+        <!--            <template v-for="property in shownProps">-->
+        <!--                <td v-if="property.sortBy !== true"-->
+        <!--                    :key="property.id">-->
+        <!--                    {{property.title}}-->
+        <!--                </td>-->
+        <!--                <td v-else @click="toggleOrder"-->
+        <!--                    :key="property.id">-->
+        <!--                    {{property.title}}-->
+        <!--                    <div v-if="currentOrder === 'asc'">-->
+        <!--                        asc-->
+        <!--                    </div>-->
+        <!--                    <div v-else>-->
+        <!--                        desc-->
+        <!--                    </div>-->
+        <!--                </td>-->
+        <!--            </template>-->
 <!--        -->
 <!--        <TableTrHead-->
 <!--                :updateSelectedItems="this.updateSelectedItems"-->
@@ -83,12 +104,18 @@
     // import TableBody from "@/components/TableBody";
     // import TableTrHead from "@/components/TableTrHead";
     import CustomCheckbox from './Checkbox';
-    import CheckboxAll from "@/CheckboxAll";
+    import CheckboxAll from "@/components/CheckboxAll";
     import {mapGetters} from "vuex";
+    import ThCell from "@/components/ThCell";
+    import TdCell from "@/components/TdCell";
+    import HandleCell from "@/components/HandleCell";
 
     export default {
         name: 'Table',
         components: {
+            HandleCell,
+            TdCell,
+            ThCell,
             CustomCheckbox,
             CheckboxAll
         },
