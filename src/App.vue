@@ -5,6 +5,7 @@
           {{selectedItems}}
       </div>
       <ControlPanel
+      :openModal="this.openModal"
       :selectedItems="this.selectedItems"
       :clearSelectedItems="this.clearSelectedItems"
       />
@@ -19,8 +20,9 @@
       />
 <!--      :selectAll="this.selectAll"-->
      <ModalWindow
-             :deleteProd="this.deleteProd"
+             :onConfirm="this.confirmDelete"
              :closeModal="this.closeModal"
+             :deleteData="this.deleteData"
              :isOpenedModal="this.isOpenedModal"
      />
   </div>
@@ -46,8 +48,9 @@ export default {
         return {
             selectedItems: [],
             currentOrder: 'asc',
-            shouldDeleteId: 0,
+            // shouldDeleteId: 0,
             isOpenedModal: false,
+            deleteData: {}
         }
     },
     computed: {
@@ -80,7 +83,6 @@ export default {
             }
             const property = sortedCol.title
             sortedCol.sortBy = true
-            console.log(sortedCol)
             allProducts.sort(dynamicSort(property, order));
 
             return allProducts;
@@ -118,9 +120,9 @@ export default {
         },
     },
     methods: {
-        addItem(id){
-            this.selectedItems.push(id);
-        },
+        // addItem(id){
+        //     this.selectedItems.push(id);
+        // },
         clearSelectedItems(){
             this._data.selectedItems = [];
         },
@@ -142,30 +144,32 @@ export default {
             this.selectedItems = [ ...newItems, ]
             this.selectedItems = Array.from(new Set(this.selectedItems))
         },
-        openModal(product){
+        openModal(obj){
             this._data.isOpenedModal = true
-            this._data.shouldDeleteId = product.id
+            this._data.deleteData = obj;
         },
         closeModal(){
             this._data.isOpenedModal = false
         },
-        deleteProd(){
-            const newProds = this._data.selectedItems.filter(item=> item.id !== this._data.shouldDeleteId)
-            this._data.selectedItems = newProds
-            this._data.isOpenedModal = false
-            this.$store.dispatch('deleteProd', this._data.shouldDeleteId);
-            this._data.shouldDeleteId = 0
-        },
-        confirmDelete(obj){
-            if(obj instanceof Array) {
+        // deleteProd(){
+        //     const newProds = this._data.selectedItems.filter(item=> item.id !== this._data.shouldDeleteId)
+        //     this._data.selectedItems = newProds
+        //     this._data.isOpenedModal = false
+        //     this.$store.dispatch('deleteProd', this._data.shouldDeleteId);
+        //     this._data.shouldDeleteId = 0
+        // },
+        confirmDelete(){
+            const deleteData = this._data.deleteData
+            if(deleteData instanceof Array) {
                 this.clearSelectedItems();
-                this.$store.dispatch('deleteProds', obj)
-                this._data.isOpenedModal = false
+                this.$store.dispatch('deleteProds', deleteData)
             }
-            else{
-                this.$store.dispatch('deleteProd', obj.id)
+            else if(deleteData instanceof Object){
+                this._data.selectedItems.map(item=> item.id !== deleteData.id)
+                this.$store.dispatch('deleteProd', deleteData.id)
             }
-
+            this._data.isOpenedModal = false
+            this._data.deleteData = {}
             // const newProds = this._data.selectedItems.filter(item=> item.id !== this._data.shouldDeleteId)
             // this._data.selectedItems = newProds
             // this.$store.dispatch('deleteProd', this._data.shouldDeleteId);

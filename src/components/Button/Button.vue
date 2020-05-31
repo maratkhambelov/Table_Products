@@ -1,7 +1,7 @@
 <template>
     <span>
         <div
-        @click="onHandle">
+        @click="onHandle(items)">
             {{label}}
         </div>
     </span>
@@ -16,6 +16,9 @@
             },
             label: {
                 type: [String, Number]
+            },
+            items:{
+                type: Array
             }
         }
     }

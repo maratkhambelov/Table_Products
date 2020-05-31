@@ -4,7 +4,7 @@
         <div
         @click="closeModal">Cancel</div>
         <div
-        @click="deleteProd">Confirm</div>
+        @click="onConfirm(deleteData)">Confirm</div>
     </div>
 </template>
 
@@ -12,18 +12,15 @@
     export default {
         name: 'ModalWindow',
         props: {
+            obj: Object,
             isOpenedModal: Boolean,
             closeModal: Function,
-            deleteProd: Function,
+            onConfirm: Function,
+            deleteData: {
+                type: [Array, Object]
+            }
         },
-        // data(){
-        //     return{
-        //         isOpened: true
-        //     }
-        // },
-        // methods:{
-        //
-        // },
+
 
     }
 </script>

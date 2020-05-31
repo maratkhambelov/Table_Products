@@ -118,7 +118,6 @@
 
 
 
-
             openModal:{
                 type: Function
             },
@@ -160,15 +159,15 @@
                 this._props.setOrder();
                 console.log(this._props.currentOrder)
             },
-            deleteProduct(product){
-
-                const newProds = this._data.selectedProds.filter(item=> item !== product.id)
-                this._data.selectedProds = newProds
-                // this.$root.$on('openModal', product => {
-                //     return product;
-                // });
-                this.$store.dispatch('deleteProd', product);
-            },
+            // deleteProduct(product){
+            //
+            //     const newProds = this._data.selectedProds.filter(item=> item !== product.id)
+            //     this._data.selectedProds = newProds
+            //     // this.$root.$on('openModal', product => {
+            //     //     return product;
+            //     // });
+            //     this.$store.dispatch('deleteProd', product);
+            // },
         },
         watch: {
             selectedProds: function () {

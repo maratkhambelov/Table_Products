@@ -5,7 +5,8 @@
        :handleProperties="this.handleProperties"
        />
       <Button
-      :onHandle="this.removeItems"
+      :onHandle="this.openModal"
+      :items="this.selectedItems"
       :label="this.selectedItems.length"
       />
        <Dropdown
@@ -64,6 +65,9 @@
             clearSelectedItems:{
                 type: Function
             },
+            openModal:{
+                type: Function
+            },
 
         },
         data(){
@@ -75,7 +79,6 @@
                     active: true
                 },
                 selectedProps:[],
-                isOpenedDropdown: false,
                 selectedAll: false,
             }
         },
@@ -92,7 +95,6 @@
                 return seenProps
             },
             placedProps() {
-                // this.$store.dispatch('setProperty', sortedCol)
                 return this.allProps.filter(item => item.placed === true && item.title !== 'id')
 
             },
@@ -112,7 +114,6 @@
                 else {
                     this._data.selectedAll = false
                 }
-                // const filteredArr = this.allValues.filter(val => this.values.includes(val));
             }
         },
 
@@ -130,18 +131,18 @@
             //   this._data.isOpenedDropdown = !this._data.isOpenedDropdown;
             // },
             handleProdsPerPage(newValue){
-                console.log(newValue)
                 this._data.activeItemProdsPerPage = newValue
             },
 
             // handleSelect(prop){
             //     this.$store.dispatch('setProperty', prop);
             // },
-            removeItems(){
-                this._props.clearSelectedItems();
-                this.$root.$emit('eventing', []);
-                this.$store.dispatch('deleteProds', this._props.selectedItems)
-            },
+
+            // removeItems(){
+            //     this._props.clearSelectedItems();
+            //     this.$root.$emit('eventing', []);
+            //     this.$store.dispatch('deleteProds', this._props.selectedItems)
+            // },
             selectAllProps(event) {
 
                 let bool = event.target.checked;
