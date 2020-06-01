@@ -1,7 +1,9 @@
 <template>
+
     <input type="checkbox"
            :checked="shouldBeChecked"
            :value="value"
+           :class="className"
            @change="updateInput"
             />
 </template>
@@ -14,16 +16,21 @@
         },
         props: {
             value: {
-                type: Number,
+                type: [Number, Boolean],
             },
             modelValue: {
                 default: false
             },
-            trueValue: {
-                default: true
-            },
-            falseValue: {
-                default: false
+            // trueValue: {
+            //     default: true
+            // },
+            // falseValue: {
+            //     default: false
+            // }
+        },
+        data(){
+            return{
+                className: ''
             }
         },
         computed: {
@@ -31,8 +38,11 @@
                 if (this.modelValue instanceof Array) {
                     return this.modelValue.includes(this.value)
                 }
-                return this.modelValue === this.trueValue
-            }
+                return this.modelValue === true
+                // return this.modelValue === this.trueValue
+
+            },
+
         },
         methods: {
             updateInput(event) {
@@ -43,18 +53,60 @@
 
                     if (isChecked) {
                         newValue.push(this.value)
+                        this._data.className = '_checked';
                     } else {
                         newValue.splice(newValue.indexOf(this.value), 1)
+                        this._data.className = '';
                     }
                     this.$emit('change', newValue)
                 } else {
+                    this.$emit('change', isChecked ? true : false)
+                    // this.$emit('change', isChecked ? this.trueValue : this.falseValue)
 
-                    this.$emit('change', isChecked ? this.trueValue : this.falseValue)
                 }
             }
         }
     }
 </script>
+<style lang="scss">
+    input{
+        visibility: visible;
+        position: relative;
+        margin:0;
+
+        &._checked{
+            visibility: hidden;
+            position: relative;
+            &:after{
+                content: '';
+                position: absolute;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 12.67px;
+                width:  12.67px;
+                background-color: #00A11E;
+                border-radius:2px;
+                visibility: visible;
+
+            }
+            &:before{
+                content: 'v';
+                position: absolute;
+                visibility: hidden;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 12.67px;
+                width:  12.67px;
+                color: #ffff;
+                z-index: 3;
+                visibility: visible;
+
+            }
+        }
+    }
+</style>
 
 
 

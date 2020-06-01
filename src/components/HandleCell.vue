@@ -1,6 +1,7 @@
 <template>
     <td>
         <div
+                class="handle-cell"
                 @click="onHandle(item)">
             <slot>
             </slot>

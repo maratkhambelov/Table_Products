@@ -1,11 +1,12 @@
 
 <template>
     <table>
-        <div>
-        </div>
+<!--        <div>-->
+<!--            {{this.selectedProds}}-->
+<!--        </div>-->
         <thead>
             <tr>
-                <th>
+                <th class="_sorted">
                     <CheckboxAll
                             :values="idsCurrentPage"
                             v-model="selectedProds"
@@ -25,11 +26,14 @@
                 </template>
             </tr>
         </thead>
-        <div>
+
+
+
+        <tbody>
             <tr v-for="product in prodsThisPage"
                 :key="product.id">
                 <td>
-                    <CustomCheckbox
+                    <Checkbox
                             :value="product.id"
                             v-model="selectedProds"
                     />
@@ -48,7 +52,7 @@
                 </HandleCell>
 
             </tr>
-        </div>
+        </tbody>
 
 <!--        <span>-->
 <!--            -->
@@ -77,20 +81,20 @@
 <script>
     // import TableBody from "@/components/TableBody";
     // import TableTrHead from "@/components/TableTrHead";
-    import CustomCheckbox from './Checkbox';
     import CheckboxAll from "@/components/CheckboxAll";
     import {mapGetters} from "vuex";
     import ThCell from "@/components/ThCell";
     import TdCell from "@/components/TdCell";
     import HandleCell from "@/components/HandleCell";
+    import Checkbox from "@/components/Checkbox";
 
     export default {
         name: 'Table',
         components: {
+            Checkbox,
             HandleCell,
             TdCell,
             ThCell,
-            CustomCheckbox,
             CheckboxAll
         },
         props: {
@@ -159,15 +163,7 @@
                 this._props.setOrder();
                 console.log(this._props.currentOrder)
             },
-            // deleteProduct(product){
-            //
-            //     const newProds = this._data.selectedProds.filter(item=> item !== product.id)
-            //     this._data.selectedProds = newProds
-            //     // this.$root.$on('openModal', product => {
-            //     //     return product;
-            //     // });
-            //     this.$store.dispatch('deleteProd', product);
-            // },
+
         },
         watch: {
             selectedProds: function () {
@@ -181,3 +177,71 @@
         }
     }
 </script>
+
+<style lang="scss">
+
+    table{
+        width: 100%;
+        border-collapse: collapse;
+    }
+    tr{
+
+    }
+    thead{
+        tr{
+            &:hover{
+                cursor: default;
+            }
+        }
+    }
+    tbody{
+        border-top: 1px solid  #EDEDED;
+
+        tr{
+            &:hover{
+                cursor: pointer;
+                background: rgba(0, 161, 30, 0.07);
+
+                td:nth-child(2){
+                    font-weight: 600;
+                }
+                .handle-cell{
+                    visibility: visible;
+                }
+            }
+        }
+        tr:nth-child(even){
+            background: #F8F9FA;
+            &:hover{
+                background: rgba(0, 161, 30, 0.07);
+            }
+        }
+    }
+    th, td{
+        min-width: 80px;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 24px;
+        color: #282136;
+        padding-top: 13px;
+        padding-bottom: 13px;
+        text-align: left;
+        max-width: 200px;
+        &:first-child{
+            text-align: center;
+        }
+
+    }
+
+    td{
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        max-width: 200px;
+
+    }
+    .handle-cell{
+        visibility: hidden;
+    }
+</style>

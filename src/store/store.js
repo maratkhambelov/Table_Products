@@ -13,36 +13,42 @@ export const store = new Vuex.Store({
                 title: 'product',
                 placed: true,
                 sortBy: true,
+                label: 'Product (100g serving) '
             },
             {
                 id: 2,
                 title: 'calories',
                 placed: true,
                 sortBy: false,
+                label: 'Calories'
             },
             {
                 id: 3,
                 title: 'fat',
                 placed: true,
                 sortBy: false,
+                label: 'Fat (g)'
             },
             {
                 id: 4,
                 title: 'carbs',
                 placed: false,
                 sortBy: false,
+                label: 'Carbs (g)'
             },
             {
                 id: 5,
                 title: 'protein',
                 placed: false,
                 sortBy: false,
+                label: 'Protein (g)'
             },
             {
                 id: 6,
                 title: 'iron',
                 placed: true,
                 sortBy: false,
+                label: 'Iron (%)'
             },
             {
                 id: 7,
@@ -125,13 +131,16 @@ export const store = new Vuex.Store({
         },
         setFirstProperty({commit}, firstProp){
             const props = [...this.getters.allProps]
-                .map(item => {
-                    item.sortBy = false
-                    if(item.title === firstProp){
-                        item.sortBy = true
-                    }
-                    return item
-                })
+
+            props.map(item => {
+                item.sortBy = false
+                if(item.title === firstProp){
+                    item.sortBy = true
+                }
+                return item
+            })
+
+
             commit('setAllProps', props);
         },
 

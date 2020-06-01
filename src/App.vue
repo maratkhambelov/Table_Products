@@ -24,6 +24,7 @@
              :closeModal="this.closeModal"
              :deleteData="this.deleteData"
              :isOpenedModal="this.isOpenedModal"
+             :coordsModal="this.coordsModal"
      />
   </div>
 </template>
@@ -35,6 +36,7 @@ import {store} from './store/store.js'
 import ControlPanel from "@/components/ControlPanel";
 import {mapGetters} from "vuex";
 import ModalWindow from "@/components/ModalWindow";
+// import {Vue} from "vue/types/vue";
 
 export default {
     name: 'App',
@@ -48,9 +50,9 @@ export default {
         return {
             selectedItems: [],
             currentOrder: 'asc',
-            // shouldDeleteId: 0,
             isOpenedModal: false,
-            deleteData: {}
+            deleteData: {},
+            coordsModal: {x: 0,y:0}
         }
     },
     computed: {
@@ -73,7 +75,10 @@ export default {
             const allProducts = this.products;
             const filteredPlacedProps = this.placedProps.filter(item=> !item.hidden && item.placed)
             let sortedCol = this.placedProps.find((item)=>item.sortBy === true);
+            this.placedProps.map(item=>item.sortBy = false) //
             const order = this._data.currentOrder;
+            // console.log('BEFORE: ')
+            // console.log(filteredPlacedProps)
             if(sortedCol === undefined) {
                 sortedCol = filteredPlacedProps.find(item=> item)
                 if(filteredPlacedProps.length === 0) {
@@ -84,7 +89,8 @@ export default {
             const property = sortedCol.title
             sortedCol.sortBy = true
             allProducts.sort(dynamicSort(property, order));
-
+            // console.log('AFTER: ')
+            // console.log(filteredPlacedProps)
             return allProducts;
         },
 
@@ -145,8 +151,14 @@ export default {
             this.selectedItems = Array.from(new Set(this.selectedItems))
         },
         openModal(obj){
-            this._data.isOpenedModal = true
-            this._data.deleteData = obj;
+            const x = window.event.screenX - 250
+            console.log(window.event)
+            const y = window.event.screenY - 70
+            this.$set(this.coordsModal, 'x',x)
+            this.$set(this.coordsModal, 'y',y)
+            this.$data.isOpenedModal = true
+            this.$data.deleteData = obj;
+            console.log(this.coordsModal)
         },
         closeModal(){
             this._data.isOpenedModal = false
@@ -160,12 +172,16 @@ export default {
         // },
         confirmDelete(){
             const deleteData = this._data.deleteData
+            console.log(deleteData)
+
             if(deleteData instanceof Array) {
                 this.clearSelectedItems();
+                this.$root.$emit('eventing', this._data.selectedItems);
                 this.$store.dispatch('deleteProds', deleteData)
             }
             else if(deleteData instanceof Object){
-                this._data.selectedItems.map(item=> item.id !== deleteData.id)
+                const newArr = this._data.selectedItems.filter(id=> id !== deleteData.id)
+                this._data.selectedItems = newArr
                 this.$store.dispatch('deleteProd', deleteData.id)
             }
             this._data.isOpenedModal = false
@@ -205,13 +221,22 @@ export function dynamicSort(property, order = 'asc') {
 
 </script>
 
-<style>
+<style  lang="scss">
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+    font-family: 'Source Sans Pro', sans-serif;
+    /*font-family: Avenir, Helvetica, Arial, sans-serif;*/
+    /*-webkit-font-smoothing: antialiased;*/
+    /*-moz-osx-font-smoothing: grayscale;*/
+    text-align: center;
+
 }
+*{
+    box-sizing: border-box;
+}
+    ._bold{
+        font-weight: 600;
+    }
+    ._normal{
+        font-weight: normal;
+    }
 </style>

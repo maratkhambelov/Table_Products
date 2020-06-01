@@ -1,5 +1,5 @@
 <template>
-   <div>
+   <div class="control-panel">
        <SortingBy
        :allProps="this.allProps"
        :handleProperties="this.handleProperties"
@@ -8,39 +8,54 @@
       :onHandle="this.openModal"
       :items="this.selectedItems"
       :label="this.selectedItems.length"
-      />
+      :isDisabled="this.selectedItems.length === 0"
+      >
+          Delete {{formatLabel}}
+      </Button>
        <Dropdown
        :currentValue="this.activeItemProdsPerPage.label">
-           <div
-                   v-for="prodsPerPageItem in prodsPerPage"
-                   :key="prodsPerPageItem.id"
-                   :value="prodsPerPageItem.id"
-                   @click="handleProdsPerPage(prodsPerPageItem)"
-           >
-               {{prodsPerPageItem.label}}
-           </div>
+           <ul>
+               <li
+                       v-for="prodsPerPageItem in prodsPerPage"
+                       :key="prodsPerPageItem.id"
+                       :value="prodsPerPageItem.id"
+                       @click="handleProdsPerPage(prodsPerPageItem)"
+               >
+                   {{prodsPerPageItem.label}}
+               </li>
+           </ul>
        </Dropdown>
        <Navigation/>
        <Dropdown
        :current-value="placedProps.length + ' columns selected'">
-           <div>
-               <label>
-                   <input
-                           @change="selectAllProps"
-                           type="checkbox"
-                           v-model="selectedAll"
-                   >
-                   SelectAll
-               </label>
-           </div>
-           <div v-for="prop in seenProperties"
-                :value="prop"
-                :key="prop.id">
-               <label>
-                   <input type="checkbox" v-model="prop.placed">
-                   {{prop.title}}
-               </label>
-           </div>
+           <ul>
+               <li class="_bold">
+                   <label>
+                       <input
+                               @change="selectAllProps"
+                               type="checkbox"
+                               v-model="selectedAll"
+                       >
+                       SelectAll
+
+                   </label>
+               </li>
+               <li v-for="prop in seenProperties"
+                   :value="prop"
+                   :key="prop.id"
+                    >
+                   <label>
+                       <Checkbox
+                               v-model="prop.placed"
+                       />
+                       <!--                               :value="prop.placed"-->
+
+                       {{prop.label}}
+<!--                       <input type="checkbox" v-model="prop.placed">-->
+<!--                       {{prop.label}}-->
+                   </label>
+               </li>
+           </ul>
        </Dropdown>
 
 
@@ -54,10 +69,11 @@
     import Button from "@/components/Button/Button";
     import Dropdown from "@/components/Dropdown/Dropdown";
     import Navigation from "@/components/Navigation/Navigation";
+    import Checkbox from "@/components/Checkbox";
 
     export default {
         name: 'ControlPanel',
-        components: {Navigation, Dropdown, Button, SortingBy},
+        components: {Checkbox, Navigation, Dropdown, Button, SortingBy},
         props:{
             selectedItems: {
                 type: Array,
@@ -90,6 +106,14 @@
                 'minCurrent',
                 'maxCurrent'
             ]),
+            formatLabel(){
+                let label = ''
+                if(this.selectedItems.length === 0) {
+                    return label
+                }
+                label = `(${this.selectedItems.length})`
+                return label
+            },
             seenProperties() {
                 const seenProps = this.allProps.filter(item => item.title !== 'id')
                 return seenProps
@@ -166,6 +190,14 @@
 
 
 </script>
+<style lang="scss">
+    .control-panel{
+        > div {
+            margin-right: 8px;
+        }
+        margin-bottom: 16px;
+    }
+</style>
 
 
 
