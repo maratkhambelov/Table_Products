@@ -47,8 +47,8 @@
                    <label>
                        <Checkbox
                                v-model="prop.placed"
+                               :value="prop.placed"
                        />
-                       <!--                               :value="prop.placed"-->
 
                        {{prop.label}}
 <!--                       <input type="checkbox" v-model="prop.placed">-->

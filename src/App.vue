@@ -239,4 +239,41 @@ export function dynamicSort(property, order = 'asc') {
     ._normal{
         font-weight: normal;
     }
+input{
+    visibility: visible;
+    position: relative;
+    margin:0;
+
+    &._checked{
+        visibility: hidden;
+        position: relative;
+        &:after{
+            content: '';
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 12.67px;
+            width:  12.67px;
+            background-color: #00A11E;
+            border-radius:2px;
+            visibility: visible;
+
+        }
+        &:before{
+            content: 'v';
+            position: absolute;
+            visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 12.67px;
+            width:  12.67px;
+            color: #ffff;
+            z-index: 3;
+            visibility: visible;
+
+        }
+    }
+}
 </style>

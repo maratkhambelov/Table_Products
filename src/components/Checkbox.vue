@@ -3,7 +3,7 @@
     <input type="checkbox"
            :checked="shouldBeChecked"
            :value="value"
-           :class="className"
+           :class="classInput"
            @change="updateInput"
             />
 </template>
@@ -21,27 +21,48 @@
             modelValue: {
                 default: false
             },
-            // trueValue: {
-            //     default: true
-            // },
-            // falseValue: {
-            //     default: false
-            // }
+
         },
-        data(){
-            return{
-                className: ''
-            }
-        },
+        // data(){
+        //     return{
+        //         className: ''
+        //     }
+        // },
         computed: {
             shouldBeChecked() {
+
                 if (this.modelValue instanceof Array) {
                     return this.modelValue.includes(this.value)
                 }
                 return this.modelValue === true
-                // return this.modelValue === this.trueValue
-
             },
+            classInput(){
+                const value =this.$props.value
+                if(value === true ){
+                    return '_checked'
+                }
+                if(this.modelValue instanceof Array){
+                    if(this.modelValue.includes(value) === true){
+                        return '_checked'
+                    }
+                }
+                return ''
+                // if( typeof(value) === "boolean"){
+                //     if(value === true){
+                //         return '_checked'
+                //     }
+                //         return ''
+                // }
+                // else  if (this.modelValue instanceof Array) {
+                //    if(this.modelValue.includes(this.value)){
+                //        return '_checked'
+                //    }
+                //     return ''
+                // }
+                //
+                // return ''
+            }
+
 
         },
         methods: {
@@ -53,20 +74,18 @@
 
                     if (isChecked) {
                         newValue.push(this.value)
-                        this._data.className = '_checked';
                     } else {
                         newValue.splice(newValue.indexOf(this.value), 1)
-                        this._data.className = '';
                     }
                     this.$emit('change', newValue)
                 } else {
                     this.$emit('change', isChecked ? true : false)
-                    // this.$emit('change', isChecked ? this.trueValue : this.falseValue)
 
                 }
             }
         }
     }
+    //
 </script>
 <style lang="scss">
     input{
