@@ -1,7 +1,7 @@
 <template>
    <div class="control-panel">
        <SortingBy
-       :allProps="this.allProps"
+       :allProps="this.seenProperties"
        :handleProperties="this.handleProperties"
        />
       <Button
@@ -13,7 +13,6 @@
           Delete {{formatLabel}}
       </Button>
        <Dropdown
-
        :currentValue="this.activeItemProdsPerPage.label">
            <ul>
                <li
@@ -32,53 +31,53 @@
            <ul>
                <li class="_bold">
                    <label>
-                       <input
-                               @change="selectAllProps"
-                               type="checkbox"
-                               v-model="selectedAll"
-                       >
+                       <CheckboxAll
+                               :values="idPlacedProps"
+                               :model-value="selectedProps"
+                               :name-event="'changeAllProps'"
+                       />
                        SelectAll
-
                    </label>
                </li>
                <li v-for="prop in seenProperties"
-                   :value="prop"
                    :key="prop.id"
                     >
                    <label>
                        <Checkbox
-                               v-model="prop.placed"
-                               :value="prop.placed"/>
+                           :model-value="selectedProps"
+                           :value="prop.id"
+                           :name-event="'changeProperty'"
+                               />
                        {{prop.label}}
-<!--                       <input type="checkbox" v-model="prop.placed">-->
-<!--                       {{prop.label}}-->
                    </label>
                </li>
            </ul>
        </Dropdown>
-
-
    </div>
-
 </template>
 
 <script>
     import { mapGetters } from 'vuex';
+
     import SortingBy from "@/components/SortingBy/SortingBy";
     import Button from "@/components/Button/Button";
     import Dropdown from "@/components/Dropdown/Dropdown";
     import Navigation from "@/components/Navigation/Navigation";
-    import Checkbox from "@/components/Checkbox";
+    import Checkbox from "@/components/Checkbox/Checkbox";
+    import CheckboxAll from "@/components/Checkbox/CheckboxAll";
 
     export default {
         name: 'ControlPanel',
-        components: {Checkbox, Navigation, Dropdown, Button, SortingBy},
+        components: {
+            CheckboxAll,
+            Checkbox,
+            Navigation, Dropdown, Button, SortingBy},
         props:{
             selectedItems: {
                 type: Array,
             },
-            clearSelectedItems:{
-                type: Function
+            selectedProps:{
+                type: Array
             },
             openModal:{
                 type: Function
@@ -96,7 +95,6 @@
                     label: '10 Per Page',
                     active: true
                 },
-                selectedProps:[],
                 selectedAll: false,
             }
         },
@@ -123,23 +121,16 @@
             placedProps() {
                 return this.allProps.filter(item => item.placed === true && item.title !== 'id')
             },
+            idPlacedProps(){
+                return this.seenProperties.map(item=>item.id)
+            }
 
         },
 
         watch:{
             activeItemProdsPerPage: function () {
                 this.$store.dispatch('setProdsPerPageById', this.activeItemProdsPerPage.id);
-                console.log(this.activeItemProdsPerPage)
             },
-            placedProps: function() {
-                const isContainsAll =  this.seenProperties.every(val=> this.placedProps.includes(val))
-                if(isContainsAll === true){
-                    this._data.selectedAll = true
-                }
-                else {
-                    this._data.selectedAll = false
-                }
-            }
         },
 
 
@@ -152,38 +143,11 @@
                 }
                 return
             },
-            // toggleDropdown(){
-            //   this._data.isOpenedDropdown = !this._data.isOpenedDropdown;
-            // },
+
             handleProdsPerPage(newValue){
                 this._data.activeItemProdsPerPage = newValue
             },
 
-            // handleSelect(prop){
-            //     this.$store.dispatch('setProperty', prop);
-            // },
-
-            // removeItems(){
-            //     this._props.clearSelectedItems();
-            //     this.$root.$emit('eventing', []);
-            //     this.$store.dispatch('deleteProds', this._props.selectedItems)
-            // },
-            selectAllProps(event) {
-
-                let bool = event.target.checked;
-                let newValues = [];
-                const allProperties = this.allProps;
-
-                if (bool) {
-                    allProperties.map(item=>item.placed = true)
-                    this.$store.dispatch('setPlacedAllProps', allProperties);
-                }
-                else {
-                    allProperties.map(item=>item.placed = false)
-                    this.$store.dispatch('setPlacedAllProps', allProperties);
-                }
-                this.$emit('change', newValues)
-            }
         },
 
     }

@@ -1,21 +1,17 @@
 
 <template>
     <table v-if="shownProps.length !== 0">
-<!--        <div>-->
-<!--            {{this.selectedProds}}-->
-<!--        </div>-->
         <thead>
             <tr>
                 <th class="_sorted">
                     <CheckboxAll
                             :values="idsCurrentPage"
-                            v-model="selectedProds"
+                            :model-value="selectedItems"
+                            :name-event="'changeAllProducts'"
                     />
                 </th>
-
                 <template
-                        v-for="property in shownProps"
-                >
+                        v-for="property in shownProps">
                     <ThCell
                             :key="property.id"
                             :currentOrder="currentOrder"
@@ -26,16 +22,14 @@
                 </template>
             </tr>
         </thead>
-
-
-
         <tbody>
             <tr v-for="product in prodsThisPage"
                 :key="product.id">
                 <td>
                     <Checkbox
+                            :model-value="selectedItems"
                             :value="product.id"
-                            v-model="selectedProds"
+                            :name-event="'changeProduct'"
                     />
                 </td>
                 <template v-for="(value,name) in product">
@@ -46,49 +40,23 @@
                     ></TdCell>
                 </template>
                 <HandleCell
-
-                :onHandle="openModal"
-                :item="product">
+                        :onHandle="openModal"
+                        :item="product">
                     <div class="icon_delete"/>
                     delete
                 </HandleCell>
-
             </tr>
         </tbody>
-
-<!--        <span>-->
-<!--            -->
-<!--            {{selectedProds}}-->
-<!--        </span>-->
-<!--        -->
-<!--        <TableTrHead-->
-<!--                :updateSelectedItems="this.updateSelectedItems"-->
-<!--                :setOrder="this.setOrder"-->
-<!--                :currentOrder="this.currentOrder"-->
-<!--                :prodsThisPage="this.prodsThisPage"-->
-<!--                :placedProps="this.placedProps"/>-->
-<!--        <TableBody-->
-<!--                :updateSelectedItems="this.updateSelectedItems"-->
-<!--                :selectedItems="this.selectedItems"-->
-<!--                    :selectAll="this.selectAll"-->
-<!--                    :placedProps="this.placedProps"-->
-<!--                    :allProducts="this.allProducts"-->
-<!--                    :prodsThisPage="this.prodsThisPage"-->
-<!--                    :addItem="this.addItem"/>-->
     </table>
 </template>
-<!--export default {-->
-<!--components: {CheckboxAll},-->
 
 <script>
-    // import TableBody from "@/components/TableBody";
-    // import TableTrHead from "@/components/TableTrHead";
-    import CheckboxAll from "@/components/CheckboxAll";
+    import CheckboxAll from "@/components/Checkbox/CheckboxAll";
     import {mapGetters} from "vuex";
-    import ThCell from "@/components/ThCell";
-    import TdCell from "@/components/TdCell";
-    import HandleCell from "@/components/HandleCell";
-    import Checkbox from "@/components/Checkbox";
+    import ThCell from "@/components/Table/ThCell";
+    import TdCell from "@/components/Table/TdCell";
+    import HandleCell from "@/components/Table/HandleCell";
+    import Checkbox from "@/components/Checkbox/Checkbox";
 
     export default {
         name: 'Table',
@@ -115,9 +83,6 @@
             setOrder: {
                 type: Function
             },
-            updateSelectedItems: {
-                type: Function
-            },
             currentOrder: {
                 type: String
             },
@@ -128,11 +93,6 @@
                 type: Function
             },
 
-        },
-        data() {
-            return {
-                selectedProds: [],
-            }
         },
         computed: {
             ...mapGetters([
@@ -156,27 +116,21 @@
             },
         },
         methods: {
-            selectAll() {
-                const ids = this.idsCurrentPage;
-                this._data.selectedProds = [...this._data.selectedProds, ...ids];
-                this._data.selectedProds = Array.from(new Set(this._data.selectedProds));
-            },
             toggleOrder() {
                 this._props.setOrder();
-                console.log(this._props.currentOrder)
             },
 
         },
-        watch: {
-            selectedProds: function () {
-                this._props.updateSelectedItems(this._data.selectedProds)
-            },
-        },
-        mounted() {
-            this.$root.$on('eventing', data => {
-                this._data.selectedProds = [...data];
-            });
-        }
+        // watch: {
+        //     selectedProds: function () {
+        //         this._props.updateSelectedItems(this._data.selectedProds)
+        //     },
+        // },
+        // mounted() {
+        //     this.$root.$on('eventing', data => {
+        //         this._data.selectedProds = [...data];
+        //     });
+        // }
     }
 </script>
 
@@ -253,7 +207,7 @@
             background-position: center;
             display: inline-block;
             background-repeat: no-repeat;
-            background-image: url("../assets/trash.svg");
+            background-image: url("../../assets/trash.svg");
             margin-right: 4px;
         }
     }

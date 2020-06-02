@@ -1,4 +1,4 @@
-import products from './data/products.json';
+import products from './products.json';
 
 /** True = 65%, False = 35% */
 const rejectByChance = () => {

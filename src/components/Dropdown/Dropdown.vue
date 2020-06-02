@@ -1,6 +1,8 @@
 <template>
     <div
-    class="dropdown_wrapper">
+            v-click-outside="closeDropdown"
+
+            class="dropdown_wrapper">
         <div
         @click="toggleDropdown"
         class="dropdown"
@@ -26,11 +28,12 @@
 <script>
 
     // import clickOutside from "@/components/clickOutside";
+    import clickOutside from '../../directive.js';
     export default {
         name: "Dropdown",
-        // directives: {
-        //     clickOutside
-        // },
+        directives: {
+            clickOutside
+        },
         props:{
             currentValue: {
                 type: [String, Number]

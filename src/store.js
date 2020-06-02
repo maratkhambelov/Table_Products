@@ -7,7 +7,7 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
     state: {
         products: [],
-        allProps: [
+        properties: [
             {
                 id: 1,
                 title: 'product',
@@ -88,13 +88,13 @@ export const store = new Vuex.Store({
             return state.products
         },
         properties: (state) => {
-            return state.allProps
+            return state.properties
         },
         prodsPerPage: (state) =>{
             return state.prodsPerPage
         },
         allProps: (state) => {
-            return state.allProps
+            return state.properties
         },
 
         minCurrent: (state)=>{
@@ -112,25 +112,20 @@ export const store = new Vuex.Store({
                     if(rejected){
                         throw new Error('error')
                     }
-                    commit('setProducts', resProducts)
+                    commit('SET_PRODUCTS', resProducts)
                 })
                 .catch((error) => {
                     console.log(error.error);
                 });
         },
         setPlacedAllProps( {commit}, newProps){
-            // const allProps = state.allProps;
-            // const nullPlacedProps = allProps.every(item=> item.placed === false);
-            // if(nullPlacedProps === true) {
-            //     console.log(nullPlacedProps)
-            // }
-            commit('setAllProps', newProps)
+            commit('SET_PROPERTIES', newProps)
         },
         setAllProducts({commit}, products){
-            commit('setProducts', products )
+            commit('SET_PRODUCTS', products )
         },
         setFirstProperty({commit}, firstProp){
-            const props = [...this.getters.allProps]
+            const props = [...this.getters.properties]
 
             props.map(item => {
                 item.sortBy = false
@@ -141,7 +136,7 @@ export const store = new Vuex.Store({
             })
 
 
-            commit('setAllProps', props);
+            commit('SET_PROPERTIES', props);
         },
 
         setProdsPerPageById({commit}, id){
@@ -167,9 +162,9 @@ export const store = new Vuex.Store({
             else{
                 newMin = min - difference
             }
-            commit('setMaxCurrent', newMax);
-            commit('setMinCurrent', newMin)
-            commit('setProductsPerPage', newProdsPerPage);
+            commit('SET_MAX_CURRENT', newMax);
+            commit('SET_MIN_CURRENT', newMin)
+            commit('SET_PRODUCTS_PERPAGE', newProdsPerPage);
         },
         nextPage({commit}){
             const activeProdsPerPage = this.getters.prodsPerPage.find(item=>item.active === true)
@@ -179,8 +174,8 @@ export const store = new Vuex.Store({
                 newMax = this.getters.products.length
                 newMin = this.getters.products.length - activeProdsPerPage.value
             }
-            commit('setMinCurrent', newMin);
-            commit('setMaxCurrent', newMax);
+            commit('SET_MIN_CURRENT', newMin);
+            commit('SET_MAX_CURRENT', newMax);
         },
         backPage({commit}){
             const activeProdsPerPage = this.getters.prodsPerPage.find(item=>item.active === true)
@@ -190,25 +185,11 @@ export const store = new Vuex.Store({
                 newMin = 0
                 newMax = activeProdsPerPage.value
             }
-            commit('setMinCurrent', newMin);
-            commit('setMaxCurrent', newMax);
+            commit('SET_MIN_CURRENT', newMin);
+            commit('SET_MAX_CURRENT', newMax);
         },
-        setProperty({commit}, prop) {
-            const props = this.getters.properties;
-            if(prop.sortBy === true){
-                const foundItem = props.find(item=> item.placed && !item.hidden && !item.sortBy)
-                foundItem.sortBy = true;
-            }
-            let newProps = props.filter(item=>{
-                if(item.id === prop.id){
-                    item.placed = !item.placed;
-                    item.sortBy = false
-                }
-                return item;
-            })
-
-            commit('setAllProps', newProps);
-
+        setProperties({commit}, newProps){
+            commit('SET_PROPERTIES', newProps)
         },
         deleteProds({commit}, arrIds){
             const currentProds = this.getters.products;
@@ -218,7 +199,7 @@ export const store = new Vuex.Store({
                     if(rejected){
                         throw new Error('error')
                     }
-                    commit('setProducts',newProds)
+                    commit('SET_PRODUCTS',newProds)
                 })
                 .catch((error) => {
                     console.log(error.error);
@@ -230,42 +211,33 @@ export const store = new Vuex.Store({
                     if(rejected){
                         throw new Error('error')
                     }
-                    commit('deleteProduct', id);
+                    commit('REMOVE_PRODUCT_ID', id);
                 })
                 .catch((error) => {
                     console.log(error.error);
                 });
         },
-        setShownProds({commit}, products){
-            commit('setShownProducts', products);
-        }
     },
     mutations: {
-        setProducts(state, newProducts) {
+        SET_PRODUCTS(state, newProducts) {
             state.products = newProducts;
         },
 
-        setAllProps(state, newProps){
-            state.allProps = newProps;
+        SET_PROPERTIES(state, newProps){
+            state.properties = newProps;
         },
-        setProductsPerPage(state, newValue){
+        SET_PRODUCTS_PERPAGE(state, newValue){
             state.productsPerPage = newValue;
         },
-        setCurrentPage(state, newValue){
-            state.currentProducts = newValue;
-        },
-        deleteProduct(state, id){
+        REMOVE_PRODUCT_ID(state, id){
             const foundItem = state.products.find(item => item.id === id);
             const idxDeletedItem = state.products.indexOf(foundItem);
             state.products.splice(idxDeletedItem, 1);
         },
-        setShownProducts(state, items){
-            state.shownProducts = items;
-        },
-        setMinCurrent(state, newValue){
+        SET_MIN_CURRENT(state, newValue){
           state.minCurrent = newValue
         },
-        setMaxCurrent(state, newValue){
+        SET_MAX_CURRENT(state, newValue){
             state.maxCurrent = newValue
         },
     }

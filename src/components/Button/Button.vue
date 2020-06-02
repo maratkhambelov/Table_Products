@@ -39,15 +39,12 @@
                 type: Function
             }
         },
-        // directives: {
-        //     clickOutside
-        // },
+
         methods:{
             handle(){
                 if(this.items === undefined){
                     return this.onHandle()
                 }
-                console.log(this.items)
 
                 return this.onHandle(this.items)
             }

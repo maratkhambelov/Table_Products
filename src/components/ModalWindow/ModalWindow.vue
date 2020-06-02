@@ -2,6 +2,7 @@
     <div
             class="modal-window"
             v-if="isOpenedModal"
+
             :style="{top: this.coords.y + 'px', left: this.coords.x + 'px'}">
         <div
                 class="modal-window_title">
@@ -25,10 +26,13 @@
 
 <script>
     import Button from "@/components/Button/Button";
+
     export default {
         name: 'ModalWindow',
         components: {Button},
-
+        // directive:{
+        //     clickOutside
+        // },
         props: {
             obj: Object,
             isOpenedModal: Boolean,

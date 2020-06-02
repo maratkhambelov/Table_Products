@@ -65,11 +65,11 @@
 
         &._asc{
 
-            background-image: url("../assets/up.svg");
+            background-image: url("../../assets/up.svg");
 
          }
         &._desc{
-            background-image: url("../assets/down.svg");
+            background-image: url("../../assets/down.svg");
 
         }
     }

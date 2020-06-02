@@ -8,8 +8,6 @@
         </div>
     </td>
 </template>
-<!--v-click-outside="vHandle"-->
-
 <script>
     export default {
         name: "HandleCell",
@@ -20,13 +18,8 @@
             item:{
                 type: Object,
             },
-            // vHandle:{
-            //     type: Function
-            // }
         },
-        // directives: {
-        //     clickOutside
-        // },
+
     }
 </script>
 
