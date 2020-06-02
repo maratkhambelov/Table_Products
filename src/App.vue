@@ -1,4 +1,3 @@
-
 <template>
   <div id="app">
       <div>
@@ -8,6 +7,7 @@
       :openModal="this.openModal"
       :selectedItems="this.selectedItems"
       :clearSelectedItems="this.clearSelectedItems"
+      :close-modal="this.closeModal"
       />
       <Table  :selectedItems="this.selectedItems"
               :placedProps="this.placedProps"
@@ -77,8 +77,6 @@ export default {
             let sortedCol = this.placedProps.find((item)=>item.sortBy === true);
             this.placedProps.map(item=>item.sortBy = false) //
             const order = this._data.currentOrder;
-            // console.log('BEFORE: ')
-            // console.log(filteredPlacedProps)
             if(sortedCol === undefined) {
                 sortedCol = filteredPlacedProps.find(item=> item)
                 if(filteredPlacedProps.length === 0) {
@@ -89,13 +87,10 @@ export default {
             const property = sortedCol.title
             sortedCol.sortBy = true
             allProducts.sort(dynamicSort(property, order));
-            // console.log('AFTER: ')
-            // console.log(filteredPlacedProps)
             return allProducts;
         },
 
         prodsThisPage() {
-
             const min = this.minCurrent;
             const max = this.maxCurrent
             const productsOnePage = [...this.shownProds.slice(min,max)]
@@ -126,9 +121,6 @@ export default {
         },
     },
     methods: {
-        // addItem(id){
-        //     this.selectedItems.push(id);
-        // },
         clearSelectedItems(){
             this._data.selectedItems = [];
         },
@@ -163,13 +155,6 @@ export default {
         closeModal(){
             this._data.isOpenedModal = false
         },
-        // deleteProd(){
-        //     const newProds = this._data.selectedItems.filter(item=> item.id !== this._data.shouldDeleteId)
-        //     this._data.selectedItems = newProds
-        //     this._data.isOpenedModal = false
-        //     this.$store.dispatch('deleteProd', this._data.shouldDeleteId);
-        //     this._data.shouldDeleteId = 0
-        // },
         confirmDelete(){
             const deleteData = this._data.deleteData
             console.log(deleteData)
@@ -186,10 +171,6 @@ export default {
             }
             this._data.isOpenedModal = false
             this._data.deleteData = {}
-            // const newProds = this._data.selectedItems.filter(item=> item.id !== this._data.shouldDeleteId)
-            // this._data.selectedItems = newProds
-            // this.$store.dispatch('deleteProd', this._data.shouldDeleteId);
-            // this._data.shouldDeleteId = 0
         }
     },
 
@@ -224,9 +205,6 @@ export function dynamicSort(property, order = 'asc') {
 <style  lang="scss">
 #app {
     font-family: 'Source Sans Pro', sans-serif;
-    /*font-family: Avenir, Helvetica, Arial, sans-serif;*/
-    /*-webkit-font-smoothing: antialiased;*/
-    /*-moz-osx-font-smoothing: grayscale;*/
     text-align: center;
 
 }
@@ -239,6 +217,8 @@ export function dynamicSort(property, order = 'asc') {
     ._normal{
         font-weight: normal;
     }
+
+    //checkbox
 input{
     visibility: visible;
     position: relative;
@@ -250,30 +230,29 @@ input{
         &:after{
             content: '';
             position: absolute;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 12.67px;
-            width:  12.67px;
+            height: 100%;
+            width:  100%;
             background-color: #00A11E;
             border-radius:2px;
             visibility: visible;
 
         }
         &:before{
-            content: 'v';
+            content: '';
+            background-image: url("./assets/mark.svg");
+            background-repeat: no-repeat;
             position: absolute;
-            visibility: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 12.67px;
-            width:  12.67px;
-            color: #ffff;
+            top: 2px;
+            left: 1px;
+            height: 6px;
+            width:  10px;
             z-index: 3;
             visibility: visible;
 
         }
+    }
+    &:hover{
+        cursor: pointer;
     }
 }
 </style>

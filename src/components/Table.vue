@@ -1,6 +1,6 @@
 
 <template>
-    <table>
+    <table v-if="shownProps.length !== 0">
 <!--        <div>-->
 <!--            {{this.selectedProds}}-->
 <!--        </div>-->
@@ -46,8 +46,10 @@
                     ></TdCell>
                 </template>
                 <HandleCell
+
                 :onHandle="openModal"
                 :item="product">
+                    <div class="icon_delete"/>
                     delete
                 </HandleCell>
 
@@ -119,9 +121,9 @@
             currentOrder: {
                 type: String
             },
-
-
-
+            closeModal:{
+                type: Function
+            },
             openModal:{
                 type: Function
             },
@@ -192,7 +194,9 @@
             &:hover{
                 cursor: default;
             }
+
         }
+
     }
     tbody{
         border-top: 1px solid  #EDEDED;
@@ -243,5 +247,14 @@
     }
     .handle-cell{
         visibility: hidden;
+        .icon_delete {
+            width: 12px;
+            height: 12px;
+            background-position: center;
+            display: inline-block;
+            background-repeat: no-repeat;
+            background-image: url("../assets/trash.svg");
+            margin-right: 4px;
+        }
     }
 </style>

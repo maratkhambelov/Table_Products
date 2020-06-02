@@ -6,8 +6,8 @@
     <th v-else @click="toggleOrder"
     class="_sorted">
         {{property.label}}
-        <span class="sort-icon">
-            {{toggleArr}}
+        <span class="sort-icon"
+        :class="arrIcon">
         </span>
     </th>
 </template>
@@ -27,17 +27,17 @@
             }
         },
         computed:{
-            toggleArr(){
+            arrIcon(){
                 if(this.$props.currentOrder === 'asc') {
-                    return 'asc'
+                    return '_asc'
                 }
-                return 'desc'
+                return '_desc'
             }
         }
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     th {
         font-style: normal;
         font-weight: 600;
@@ -51,8 +51,26 @@
         font-size: 14px;
         line-height: 24px;
         color: #00A11E;
+        &:hover{
+            cursor: pointer;
+        }
     }
     .sort-icon{
+        margin-left: 6px;
+        width: 8px;
+        height:12px;
+        background-position: center;
+        display: inline-block;
+        background-repeat: no-repeat;
 
+        &._asc{
+
+            background-image: url("../assets/up.svg");
+
+         }
+        &._desc{
+            background-image: url("../assets/down.svg");
+
+        }
     }
 </style>

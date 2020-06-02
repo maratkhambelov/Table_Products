@@ -13,6 +13,7 @@
             Cancel
         </Button>
         <Button
+
                 :on-handle="onConfirm"
                 :items="deleteData"
                 :class-name="'modal-window_confirm'"
@@ -27,6 +28,7 @@
     export default {
         name: 'ModalWindow',
         components: {Button},
+
         props: {
             obj: Object,
             isOpenedModal: Boolean,

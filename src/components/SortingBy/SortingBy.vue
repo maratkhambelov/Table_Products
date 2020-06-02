@@ -5,9 +5,10 @@
              :key="prop.id"
              class="control-panel_sorting_block"
              :class="{_active: prop.sortBy  , _disabled: !prop.placed }"
+             @click="handleProperties(prop.title)"
         >
             <span v-if="prop.title !== 'id'"
-                 @click="handleProperties(prop.title)"
+
                  class="control-panel_sorting_property">
                {{prop.label}}
            </span>

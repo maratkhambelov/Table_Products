@@ -32,14 +32,14 @@ export const store = new Vuex.Store({
             {
                 id: 4,
                 title: 'carbs',
-                placed: false,
+                placed: true,
                 sortBy: false,
                 label: 'Carbs (g)'
             },
             {
                 id: 5,
                 title: 'protein',
-                placed: false,
+                placed: true,
                 sortBy: false,
                 label: 'Protein (g)'
             },

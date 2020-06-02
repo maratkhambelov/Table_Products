@@ -12,8 +12,11 @@
 
     </div>
 </template>
+<!--v-click-outside="vHandle"-->
 
 <script>
+    // import clickOutside from "@/components/clickOutside";
+
     export default {
         name: "Button",
         props:{
@@ -31,8 +34,14 @@
             },
             className:{
                 type: String,
+            },
+            vHandle:{
+                type: Function
             }
         },
+        // directives: {
+        //     clickOutside
+        // },
         methods:{
             handle(){
                 if(this.items === undefined){

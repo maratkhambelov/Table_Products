@@ -13,6 +13,7 @@
           Delete {{formatLabel}}
       </Button>
        <Dropdown
+
        :currentValue="this.activeItemProdsPerPage.label">
            <ul>
                <li
@@ -47,9 +48,7 @@
                    <label>
                        <Checkbox
                                v-model="prop.placed"
-                               :value="prop.placed"
-                       />
-
+                               :value="prop.placed"/>
                        {{prop.label}}
 <!--                       <input type="checkbox" v-model="prop.placed">-->
 <!--                       {{prop.label}}-->
@@ -84,6 +83,9 @@
             openModal:{
                 type: Function
             },
+            closeModal:{
+                type: Function
+            }
 
         },
         data(){
@@ -120,7 +122,6 @@
             },
             placedProps() {
                 return this.allProps.filter(item => item.placed === true && item.title !== 'id')
-
             },
 
         },
@@ -186,7 +187,6 @@
         },
 
     }
-
 
 
 </script>

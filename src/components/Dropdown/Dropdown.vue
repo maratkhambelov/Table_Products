@@ -5,6 +5,7 @@
         @click="toggleDropdown"
         class="dropdown"
         >
+<!--            v-click-outside="closeDropdown"-->
             <span class="dropdown_label">
             {{currentValue}}
             </span>
@@ -23,8 +24,13 @@
 </template>
 
 <script>
+
+    // import clickOutside from "@/components/clickOutside";
     export default {
         name: "Dropdown",
+        // directives: {
+        //     clickOutside
+        // },
         props:{
             currentValue: {
                 type: [String, Number]
@@ -47,8 +53,13 @@
             toggleDropdown(){
                 this._data.isOpenedDropdown = !this._data.isOpenedDropdown;
             },
+            closeDropdown(){
+                this._data.isOpenedDropdown = false
+            },
         }
     }
+
+
 </script>
 
 <style scoped lang="scss">

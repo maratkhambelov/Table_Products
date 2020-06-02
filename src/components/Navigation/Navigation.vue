@@ -1,27 +1,27 @@
 <template>
       <div class="navigation">
-          <div class="navigation_block">
+          <div class="navigation_block"
+               :class="isFirst">
               <div
                       class="navigation_arrow"
-                      :class="isFirst"
+
                       @click="toBack">
               </div>
           </div>
-           <span
-           class="navigation_numbers">
+           <span class="navigation_numbers">
                {{minCurrent + 1}}
                -
                {{maxCurrent }}
-                   <span
-                   class="_normal">
+                   <span class="_normal">
                    of
                    </span>
                {{products.length}}
            </span>
-          <div class="navigation_block">
+          <div class="navigation_block"
+               :class="isLast"
+          >
               <div
                       class="navigation_arrow"
-                      :class="isLast"
                       @click="toNext">
               </div>
           </div>
@@ -71,28 +71,39 @@
 <style scoped  lang="scss">
 
     .navigation{
-        display: inline-block;
+        /*display: inline-block;*/
         &_block{
-            padding: 4px;
+            padding: 3px;
             display: inline-block;
-        }
-        &_arrow{
-            width: 24px;
-            height: 24px;
-            /*background-position: center;*/
-            /*display: inline-block;*/
-            /*background-repeat: no-repeat;*/
+            box-sizing: border-box;
+            border-radius: 2px;
+            border: 1px solid #D5DAE0;
+            &._disabled{
+                border: 1px solid #C6CBD4;
+                opacity: 0.25;
+            }
+            .navigation_arrow{
+                width: 24px;
+                height: 24px;
+                &:hover{
+                    cursor: pointer;
+                }
+            }
             &._left{
-                background-image: url("../../assets/Left.svg");
+                .navigation_arrow{
+                    background-image: url("../../assets/Left.svg");
+
+                }
 
             }
             &._right{
-                background-image: url("../../assets/Right.svg");
+                .navigation_arrow{
+                    background-image: url("../../assets/Right.svg");
 
+                }
             }
-            &._disabled{
-            }
-         }
+        }
+
         &_numbers{
             font-style: normal;
             font-size: 14px;
