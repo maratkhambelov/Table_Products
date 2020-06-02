@@ -71,7 +71,10 @@
         components: {
             CheckboxAll,
             Checkbox,
-            Navigation, Dropdown, Button, SortingBy},
+            Navigation,
+            Dropdown,
+            Button,
+            SortingBy},
         props:{
             selectedItems: {
                 type: Array,
@@ -82,10 +85,6 @@
             openModal:{
                 type: Function
             },
-            closeModal:{
-                type: Function
-            }
-
         },
         data(){
             return{
@@ -98,6 +97,11 @@
                 selectedAll: false,
             }
         },
+        watch:{
+            activeItemProdsPerPage: function () {
+                this.$store.dispatch('setProdsPerPageById', this.activeItemProdsPerPage.id);
+            },
+        },
         computed: {
             ...mapGetters([
                 'prodsPerPage',
@@ -107,6 +111,7 @@
                 'maxCurrent'
             ]),
             formatLabel(){
+
                 let label = ''
                 if(this.selectedItems.length === 0) {
                     return label
@@ -124,16 +129,7 @@
             idPlacedProps(){
                 return this.seenProperties.map(item=>item.id)
             }
-
         },
-
-        watch:{
-            activeItemProdsPerPage: function () {
-                this.$store.dispatch('setProdsPerPageById', this.activeItemProdsPerPage.id);
-            },
-        },
-
-
         methods: {
             handleProperties(property){
                 const props = this.allProps;
@@ -143,15 +139,11 @@
                 }
                 return
             },
-
             handleProdsPerPage(newValue){
                 this._data.activeItemProdsPerPage = newValue
             },
-
         },
-
     }
-
 
 </script>
 <style lang="scss">

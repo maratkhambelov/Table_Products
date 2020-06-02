@@ -1,4 +1,3 @@
-
 <template>
     <table v-if="shownProps.length !== 0">
         <thead>
@@ -86,9 +85,7 @@
             currentOrder: {
                 type: String
             },
-            closeModal:{
-                type: Function
-            },
+
             openModal:{
                 type: Function
             },
@@ -121,16 +118,6 @@
             },
 
         },
-        // watch: {
-        //     selectedProds: function () {
-        //         this._props.updateSelectedItems(this._data.selectedProds)
-        //     },
-        // },
-        // mounted() {
-        //     this.$root.$on('eventing', data => {
-        //         this._data.selectedProds = [...data];
-        //     });
-        // }
     }
 </script>
 

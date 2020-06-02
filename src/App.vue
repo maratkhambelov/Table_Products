@@ -9,11 +9,9 @@
         <ControlPanel
                 :openModal="this.openModal"
                 :selectedItems="this.selectedItems"
-                :close-modal="this.closeModal"
                 :selectedProps="this.selectedProps"
         />
         <Table  :selectedItems="this.selectedItems"
-                :close-modal="this.closeModal"
                 :placedProps="this.placedProps"
                 :allProducts="this.allProducts"
                 :prodsThisPage="this.prodsThisPage"
