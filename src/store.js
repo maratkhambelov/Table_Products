@@ -84,6 +84,12 @@ export const store = new Vuex.Store({
         ],
     },
     getters: {
+        idsPlacedProperties: state =>{
+          return state.properties.filter(item=>item.placed === true ).map(item=>item.id)
+        },
+        placedProperties: state =>{
+            return state.properties.filter(item=>item.placed === true )
+        },
         products: (state) => {
             return state.products
         },
@@ -189,6 +195,7 @@ export const store = new Vuex.Store({
             commit('SET_MAX_CURRENT', newMax);
         },
         setProperties({commit}, newProps){
+            console.log(newProps)
             commit('SET_PROPERTIES', newProps)
         },
         deleteProds({commit}, arrIds){

@@ -76,6 +76,7 @@
 
         &_block{
             padding: 11px;
+            margin: 11px 0px -11px 0;
             display: inline-block;
             border-radius: 2px;
             border: 1px solid #D5DAE0;
@@ -109,11 +110,12 @@
         }
 
         &_numbers{
-            /*font-style: normal;*/
+            font-style: normal;
+            display: inline;
             font-size: 14px;
-            /*line-height: 24px;*/
-            /*color: #3D374A;*/
-            /*font-weight: 600;*/
+            line-height: 24px;
+            color: #3D374A;
+            font-weight: 600;
             /*vertical-align: super;*/
         }
 
