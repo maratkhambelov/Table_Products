@@ -26,18 +26,6 @@
                 type: Function,
             }
         },
-        computed:{
-            // setClass(prop){
-            //     if(prop.sortBy === true && prop.placed){
-            //         return '_active'
-            //     }
-            //     else if(prop.placed === false){
-            //         return '_disabled'
-            //     }
-            //     return ''
-            // }
-        },
-
     }
 </script>
 
@@ -58,7 +46,6 @@
             }
         }
         &._disabled{
-            /*border: 1px solid #C6CBD4;*/
             border-radius: 2px;
             background-color:#C6CBD4;
             opacity: 0.3;

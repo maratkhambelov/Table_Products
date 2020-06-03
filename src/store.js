@@ -195,7 +195,6 @@ export const store = new Vuex.Store({
             commit('SET_MAX_CURRENT', newMax);
         },
         setProperties({commit}, newProps){
-            console.log(newProps)
             commit('SET_PROPERTIES', newProps)
         },
         deleteProds({commit}, arrIds){

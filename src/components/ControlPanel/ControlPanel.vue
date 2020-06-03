@@ -152,6 +152,9 @@
             margin-right: 8px;
         }
         margin-bottom: 16px;
+        .control-panel_sorting{
+            margin-right: 40px;
+        }
     }
 </style>
 

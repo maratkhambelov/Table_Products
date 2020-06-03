@@ -12,10 +12,8 @@
 
     </div>
 </template>
-<!--v-click-outside="vHandle"-->
 
 <script>
-    // import clickOutside from "@/components/clickOutside";
 
     export default {
         name: "Button",
@@ -57,10 +55,10 @@
     .button{
         box-sizing: border-box;
         border-radius: 2px;
-        padding: 4px 15px;
+        padding: 3px 15px;
         display: inline-block;
         background: #00A11E;
-
+        border: 1px solid  #00A11E;
         &._disabled{
             border: 1px solid #C6CBD4;
             box-sizing: border-box;

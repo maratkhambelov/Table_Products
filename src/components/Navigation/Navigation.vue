@@ -71,7 +71,6 @@
 <style scoped  lang="scss">
 
     .navigation{
-        /*max-height: 32px;*/
         display: inline-block;
 
         &_block{
@@ -116,7 +115,6 @@
             line-height: 24px;
             color: #3D374A;
             font-weight: 600;
-            /*vertical-align: super;*/
         }
 
     }

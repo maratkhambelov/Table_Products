@@ -27,7 +27,6 @@
 
 <script>
 
-    // import clickOutside from "@/components/clickOutside";
     import clickOutside from '../../directive.js';
     export default {
         name: "Dropdown",
@@ -104,7 +103,6 @@
         box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.16);
         border-radius: 4px;
         margin-top: 8px;
-        /*width: 100%;*/
         padding: 15px;
         overflow-y: scroll;
         z-index: 1;
