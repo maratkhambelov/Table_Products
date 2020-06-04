@@ -103,7 +103,7 @@
         box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.16);
         border-radius: 4px;
         margin-top: 8px;
-        padding: 15px;
+        padding: 15px 0;
         overflow-y: scroll;
         z-index: 1;
         box-sizing: content-box;
@@ -124,9 +124,10 @@
             color: #282136;
             text-align: left;
             white-space: nowrap;
-
+            padding: 4px 16px;
             &:hover{
                 cursor: pointer;
+                background-color: #f8f9fa;
 
                 *{
                     cursor: pointer;
@@ -136,7 +137,7 @@
 
         }
         li+li{
-            margin-top: 8px;
+            /*margin-top: 8px;*/
         }
 
     }
