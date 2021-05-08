@@ -3,8 +3,7 @@ import products from './products.json';
 /** True = 65%, False = 35% */
 const rejectByChance = () => {
 //   return Math.random() <= 0.35;
-  return Math.random() <= 1;
-
+  return false;
 };
 
 /** Emulate get request */
